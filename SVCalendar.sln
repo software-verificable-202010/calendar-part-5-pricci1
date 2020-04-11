@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30002.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SVCalendar.WPF", "SVCalendar.WPF\SVCalendar.WPF.csproj", "{5B704814-E78E-407C-A929-B08812080F29}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SVCalendar.Model", "SVCalendar.Model\SVCalendar.Model.csproj", "{7C2B09FD-D0AE-4794-A547-45370B9E440D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5B704814-E78E-407C-A929-B08812080F29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B704814-E78E-407C-A929-B08812080F29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B704814-E78E-407C-A929-B08812080F29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B704814-E78E-407C-A929-B08812080F29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C2B09FD-D0AE-4794-A547-45370B9E440D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C2B09FD-D0AE-4794-A547-45370B9E440D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C2B09FD-D0AE-4794-A547-45370B9E440D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C2B09FD-D0AE-4794-A547-45370B9E440D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E7A00150-A177-4118-9D65-243AB4F47F22}
+	EndGlobalSection
+EndGlobal
