@@ -73,6 +73,7 @@ namespace SVCalendar.WPF.View
         {
             var monthDaysList = new List<DayBlock>();
             int daysInCurrentMonth = DateTime.DaysInMonth(CurrentDate.Year, CurrentDate.Month);
+            DateTime firstDayOfCurrentMonth = CurrentDate.AddDays(-1 * CurrentDate.Day + 1);
             int firstWeekDayOfCurrentMonth = (int)CurrentDate.AddDays(-1 * CurrentDate.Day + 1).DayOfWeek;
             // Make 0 = Monday, ... 6 = Sunday
             int adjustedFirstWeekDayOfCurrentMonth =
@@ -80,13 +81,12 @@ namespace SVCalendar.WPF.View
 
             for (int i = 1; i < adjustedFirstWeekDayOfCurrentMonth + 1; i++)
             {
-                monthDaysList.Add(new DayBlock(-1, -1));
+                monthDaysList.Add(new DayBlock(null));
             }
 
             for (int i = 1; i <= daysInCurrentMonth; i++)
             {
-                int weekDayNumber = Math.Abs(7 - adjustedFirstWeekDayOfCurrentMonth + i) % 7;
-                monthDaysList.Add(new DayBlock(i, weekDayNumber));
+                monthDaysList.Add(new DayBlock(firstDayOfCurrentMonth.AddDays(i - 1)));
             }
 
             return monthDaysList;
@@ -110,16 +110,20 @@ namespace SVCalendar.WPF.View
 
     internal class DayBlock
     {
-        public DayBlock(int dayNumber, int weekDayNumber)
+        public DayBlock(DateTime? date = null)
         {
-            DayNumber = dayNumber;
-            WeekDayNumber = weekDayNumber;
+            Date = date;
         }
 
-        public int DayNumber { get; set; }
+        public DateTime? Date { get; set; }
+
+        public int DayNumber => Date?.Day ?? -1;
         public String DayNumberString => DayNumber > 0 ? DayNumber.ToString() : "";
-        public int WeekDayNumber { get; set; }
-        public SolidColorBrush Color =>
-            WeekDayNumber.Equals(5) || WeekDayNumber.Equals(6) ? Brushes.LightCoral : Brushes.LightBlue;
+        public SolidColorBrush Color => Date?.DayOfWeek switch
+            {
+                DayOfWeek.Saturday => Brushes.LightCoral,
+                DayOfWeek.Sunday => Brushes.LightCoral,
+                _ => Brushes.LightBlue
+            };
     }
 }
