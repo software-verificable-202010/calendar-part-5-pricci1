@@ -23,16 +23,16 @@
     <KeyBinding Key="Right" Command="{Binding NextMonthCommand}"/>
   </UserControl.InputBindings>
   <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-      <Separator Height="10"/>
-      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Stretch" FlowDirection="LeftToRight">
+    <Separator Height="10"/>
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Stretch" FlowDirection="LeftToRight">
       <Button Content="Previous" Width="50" Command="{Binding PreviousMonthCommand}"/>
       <Separator Visibility="Hidden" Width="100"></Separator>
-        <TextBlock Text="{Binding MonthYearString}"></TextBlock>
+      <TextBlock Text="{Binding MonthYearString}"></TextBlock>
       <Separator Visibility="Hidden" Width="100"></Separator>
       <Button Content="Next" Width="50" Command="{Binding NextMonthCommand}"/>
-      </StackPanel>
+    </StackPanel>
     <Separator Visibility="Hidden" Height="10"/>
-      <StackPanel Orientation="Horizontal">
+    <StackPanel Orientation="Horizontal">
       <TextBlock Text="Monday" TextAlignment="Center" Width="100"/>
       <TextBlock Text="Tuesday" TextAlignment="Center" Width="100"/>
       <TextBlock Text="Wednesday" TextAlignment="Center" Width="100"/>
@@ -40,14 +40,14 @@
       <TextBlock Text="Friday" TextAlignment="Center" Width="100"/>
       <TextBlock Text="Saturday" TextAlignment="Center" Width="100"/>
       <TextBlock Text="Sunday" TextAlignment="Center" Width="100"/>
-</StackPanel>
-    <ItemsControl ItemsSource="{Binding MonthDaysList}" ItemTemplate="{StaticResource DayBlockTemplate}">
-        <ItemsControl.ItemsPanel>
-          <ItemsPanelTemplate>
-            <WrapPanel Background="Azure" Width="700"/>
-          </ItemsPanelTemplate>
-        </ItemsControl.ItemsPanel>
-      </ItemsControl>
-
     </StackPanel>
+    <ItemsControl ItemsSource="{Binding MonthDaysList}" ItemTemplate="{StaticResource DayBlockTemplate}">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <WrapPanel Background="Azure" Width="700"/>
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+    </ItemsControl>
+
+  </StackPanel>
 </UserControl>

@@ -116,14 +116,13 @@ namespace SVCalendar.WPF.View
         }
 
         public DateTime? Date { get; set; }
-
         public int DayNumber => Date?.Day ?? -1;
         public String DayNumberString => DayNumber > 0 ? DayNumber.ToString() : "";
         public SolidColorBrush Color => Date?.DayOfWeek switch
-            {
-                DayOfWeek.Saturday => Brushes.LightCoral,
-                DayOfWeek.Sunday => Brushes.LightCoral,
-                _ => Brushes.LightBlue
-            };
+        {
+            DayOfWeek.Saturday => Brushes.LightCoral,
+            DayOfWeek.Sunday => Brushes.LightCoral,
+            _ => Brushes.LightBlue
+        };
     }
 }
