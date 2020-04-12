@@ -10,8 +10,4 @@
     <ProjectReference Include="..\SVCalendar.Model\SVCalendar.Model.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="View\" />
-  </ItemGroup>
-
 </Project>

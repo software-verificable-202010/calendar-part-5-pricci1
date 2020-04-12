@@ -1,12 +1,15 @@
-﻿<Window x:Class="SVCalendar.WPF.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SVCalendar.WPF"
+        xmlns:View="clr-namespace:SVCalendar.WPF.View" x:Class="SVCalendar.WPF.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+  <Grid>
 
-    </Grid>
+    <View:MonthGrid HorizontalAlignment="Center" Height="414" VerticalAlignment="Center" Width="780"/>
+
+  </Grid>
 </Window>

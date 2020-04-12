@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="SVCalendar.WPF.View.MonthGrid"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SVCalendar.WPF.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+  <UserControl.DataContext>
+    <local:MonthGridViewModel/>
+  </UserControl.DataContext>
+  <UserControl.Resources>
+    <DataTemplate x:Key="DayBlockTemplate">
+      <Border BorderThickness="1" BorderBrush="Black">
+        <StackPanel>
+          <TextBlock Text="{Binding DayNumberString}" Background="{Binding Color}" Width="98"></TextBlock>
+        </StackPanel>
+      </Border>
+    </DataTemplate>
+  </UserControl.Resources>
+  <UserControl.InputBindings>
+    <KeyBinding Key="Left" Command="{Binding PreviousMonthCommand}"/>
+    <KeyBinding Key="Right" Command="{Binding NextMonthCommand}"/>
+  </UserControl.InputBindings>
+  <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+      <Separator Height="10"/>
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Stretch" FlowDirection="LeftToRight">
+      <Button Content="Previous" Width="50" Command="{Binding PreviousMonthCommand}"/>
+      <Separator Visibility="Hidden" Width="100"></Separator>
+        <TextBlock Text="{Binding MonthYearString}"></TextBlock>
+      <Separator Visibility="Hidden" Width="100"></Separator>
+      <Button Content="Next" Width="50" Command="{Binding NextMonthCommand}"/>
+      </StackPanel>
+    <Separator Visibility="Hidden" Height="10"/>
+      <StackPanel Orientation="Horizontal">
+      <TextBlock Text="Monday" TextAlignment="Center" Width="100"/>
+      <TextBlock Text="Tuesday" TextAlignment="Center" Width="100"/>
+      <TextBlock Text="Wednesday" TextAlignment="Center" Width="100"/>
+      <TextBlock Text="Thursday" TextAlignment="Center" Width="100"/>
+      <TextBlock Text="Friday" TextAlignment="Center" Width="100"/>
+      <TextBlock Text="Saturday" TextAlignment="Center" Width="100"/>
+      <TextBlock Text="Sunday" TextAlignment="Center" Width="100"/>
+</StackPanel>
+    <ItemsControl ItemsSource="{Binding MonthDaysList}" ItemTemplate="{StaticResource DayBlockTemplate}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <WrapPanel Background="Azure" Width="700"/>
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+      </ItemsControl>
+
+    </StackPanel>
+</UserControl>
