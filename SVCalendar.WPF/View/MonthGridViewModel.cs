@@ -15,30 +15,30 @@ namespace SVCalendar.WPF.View
         public MonthGridViewModel()
         {
             CurrentDate = DateTime.Today;
-            MonthDaysList = InitializeDays();
-            NextMonthCommand = new RelayCommand(OnNextMonth);
-            PreviousMonthCommand = new RelayCommand(OnPreviousMonth);
+            MonthDays = InitializeDays();
+            NextMonthCommand = new RelayCommand(OnNextMonthSelected);
+            PreviousMonthCommand = new RelayCommand(OnPreviousMonthSelected);
         }
 
-        private void OnPreviousMonth()
+        private void OnPreviousMonthSelected()
         {
             CurrentDate = CurrentDate.AddMonths(-1);
-            MonthDaysList = InitializeDays();
+            MonthDays = InitializeDays();
         }
 
-        private void OnNextMonth()
+        private void OnNextMonthSelected()
         {
             CurrentDate = CurrentDate.AddMonths(1);
-            MonthDaysList = InitializeDays();
+            MonthDays = InitializeDays();
         }
 
-        private List<DayBlock> _monthDaysList;
-        public List<DayBlock> MonthDaysList
+        private List<DayBlock> _monthDays;
+        public List<DayBlock> MonthDays
         {
-            get => _monthDaysList;
+            get => _monthDays;
             set
             {
-                _monthDaysList = value;
+                _monthDays = value;
                 OnPropertyChanged();
             }
         }
@@ -51,16 +51,16 @@ namespace SVCalendar.WPF.View
             {
                 _currentDate = value;
                 OnPropertyChanged();
-                MonthYearString = $"{_monthNames[value.Month - 1]} {value.Year}";
+                MonthYearText = $"{_monthNames[value.Month - 1]} {value.Year}";
             }
         }
 
-        public String MonthYearString
+        public String MonthYearText
         {
-            get => _monthYearString;
+            get => _monthYearText;
             private set
             {
-                _monthYearString = value;
+                _monthYearText = value;
                 OnPropertyChanged();
             }
         }
@@ -71,25 +71,33 @@ namespace SVCalendar.WPF.View
 
         public List<DayBlock> InitializeDays()
         {
-            var monthDaysList = new List<DayBlock>();
+            var monthDays = new List<DayBlock>();
             int daysInCurrentMonth = DateTime.DaysInMonth(CurrentDate.Year, CurrentDate.Month);
             DateTime firstDayOfCurrentMonth = CurrentDate.AddDays(-1 * CurrentDate.Day + 1);
             int firstWeekDayOfCurrentMonth = (int)CurrentDate.AddDays(-1 * CurrentDate.Day + 1).DayOfWeek;
-            // Make 0 = Monday, ... 6 = Sunday
+            
             int adjustedFirstWeekDayOfCurrentMonth =
-                firstWeekDayOfCurrentMonth == 0 ? 6 : firstWeekDayOfCurrentMonth - 1;
+                AdjustFirstWeekDayOfCurrentMonth(firstWeekDayOfCurrentMonth);
 
             for (int i = 1; i < adjustedFirstWeekDayOfCurrentMonth + 1; i++)
             {
-                monthDaysList.Add(new DayBlock(null));
+                monthDays.Add(new DayBlock(null));
             }
 
             for (int i = 1; i <= daysInCurrentMonth; i++)
             {
-                monthDaysList.Add(new DayBlock(firstDayOfCurrentMonth.AddDays(i - 1)));
+                monthDays.Add(new DayBlock(firstDayOfCurrentMonth.AddDays(i - 1)));
             }
 
-            return monthDaysList;
+            return monthDays;
+        }
+
+        private int AdjustFirstWeekDayOfCurrentMonth(int firstWeekDayOfCurrentMonth)
+        {
+            // Make 0 = Monday, ... 6 = Sunday
+            int sundayOldValue = 0;
+            int sundayNewValue = 6;
+            return firstWeekDayOfCurrentMonth == sundayOldValue ? sundayNewValue : firstWeekDayOfCurrentMonth - 1;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -105,7 +113,7 @@ namespace SVCalendar.WPF.View
             "November", "December"
         };
 
-        private string _monthYearString;
+        private string _monthYearText;
     }
 
     internal class DayBlock
@@ -117,7 +125,7 @@ namespace SVCalendar.WPF.View
 
         public DateTime? Date { get; set; }
         public int DayNumber => Date?.Day ?? -1;
-        public String DayNumberString => DayNumber > 0 ? DayNumber.ToString() : "";
+        public String DayNumberText => DayNumber > 0 ? DayNumber.ToString() : "";
         public SolidColorBrush Color => Date?.DayOfWeek switch
         {
             DayOfWeek.Saturday => Brushes.LightCoral,

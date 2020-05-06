@@ -13,7 +13,7 @@
     <DataTemplate x:Key="DayBlockTemplate">
       <Border BorderThickness="1" BorderBrush="Black">
         <StackPanel>
-          <TextBlock Text="{Binding DayNumberString}" Background="{Binding Color}" Width="98"></TextBlock>
+          <TextBlock Text="{Binding DayNumberText}" Background="{Binding Color}" Width="98"></TextBlock>
         </StackPanel>
       </Border>
     </DataTemplate>
@@ -27,7 +27,7 @@
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Stretch" FlowDirection="LeftToRight">
       <Button Content="Previous" Width="50" Command="{Binding PreviousMonthCommand}"/>
       <Separator Visibility="Hidden" Width="100"></Separator>
-      <TextBlock Text="{Binding MonthYearString}"></TextBlock>
+      <TextBlock Text="{Binding MonthYearText}"></TextBlock>
       <Separator Visibility="Hidden" Width="100"></Separator>
       <Button Content="Next" Width="50" Command="{Binding NextMonthCommand}"/>
     </StackPanel>
@@ -41,7 +41,7 @@
       <TextBlock Text="Saturday" TextAlignment="Center" Width="100"/>
       <TextBlock Text="Sunday" TextAlignment="Center" Width="100"/>
     </StackPanel>
-    <ItemsControl ItemsSource="{Binding MonthDaysList}" ItemTemplate="{StaticResource DayBlockTemplate}">
+    <ItemsControl ItemsSource="{Binding MonthDays}" ItemTemplate="{StaticResource DayBlockTemplate}">
       <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>
           <WrapPanel Background="Azure" Width="700"/>
