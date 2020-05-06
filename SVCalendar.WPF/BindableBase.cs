@@ -16,5 +16,15 @@ namespace SVCalendar.WPF
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void SetProperty<T>(ref T member, T val,
+            [CallerMemberName] string propertyName = null)
+        {
+            if (object.Equals(member, val)) return;
+
+            member = val;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }
