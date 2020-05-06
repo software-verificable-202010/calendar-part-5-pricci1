@@ -4,12 +4,35 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SVCalendar.WPF"
-        xmlns:View="clr-namespace:SVCalendar.WPF.View" x:Class="SVCalendar.WPF.MainWindow"
+        xmlns:view="clr-namespace:SVCalendar.WPF.View" x:Class="SVCalendar.WPF.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-  <Grid>
-
-    <View:MonthGrid HorizontalAlignment="Center" Height="414" VerticalAlignment="Center" Width="780"/>
-
-  </Grid>
+  <Window.DataContext>
+    <local:MainWindowViewModel />
+  </Window.DataContext>
+  <Window.Resources>
+    <DataTemplate DataType="{x:Type view:MonthGridViewModel}">
+      <view:MonthGrid />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type view:WeekGridViewModel}">
+      <view:WeekGridView />
+    </DataTemplate>
+  </Window.Resources>
+  <StackPanel Orientation="Vertical">
+    <Separator Width="10" />
+    <StackPanel Orientation="Horizontal">
+      <Separator Width="10" />
+      <Button Content="Monthly"
+              Command="{Binding ChangeCalendarModeCommand}"
+              CommandParameter="{x:Static local:CalendarMode.Monthly}"/>
+      <Separator Width="10" />
+      <Button Content="Weekly"
+              Command="{Binding ChangeCalendarModeCommand}"
+              CommandParameter="{x:Static local:CalendarMode.Weekly}"/>
+    </StackPanel>
+    <ScrollViewer Height="380">
+      <ContentControl Content="{Binding CurrentViewModel}"/>
+    </ScrollViewer>
+    
+  </StackPanel>
 </Window>
