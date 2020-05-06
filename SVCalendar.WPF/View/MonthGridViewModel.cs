@@ -9,7 +9,7 @@ using SVCalendar.WPF.Annotations;
 
 namespace SVCalendar.WPF.View
 {
-    class MonthGridViewModel : INotifyPropertyChanged
+    class MonthGridViewModel : BindableBase
     {
 
         public MonthGridViewModel()
@@ -98,14 +98,6 @@ namespace SVCalendar.WPF.View
             int sundayOldValue = 0;
             int sundayNewValue = 6;
             return firstWeekDayOfCurrentMonth == sundayOldValue ? sundayNewValue : firstWeekDayOfCurrentMonth - 1;
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private readonly string[] _monthNames = {
