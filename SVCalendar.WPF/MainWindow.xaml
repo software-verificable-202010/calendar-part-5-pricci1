@@ -17,18 +17,24 @@
     <DataTemplate DataType="{x:Type view:WeekGridViewModel}">
       <view:WeekGridView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type view:AddEventViewModel}">
+      <view:AddEventView />
+    </DataTemplate>
   </Window.Resources>
   <StackPanel Orientation="Vertical">
     <Separator Width="10" />
     <StackPanel Orientation="Horizontal">
-      <Separator Width="10" />
+      <Separator Visibility="Hidden" Width="10" />
       <Button Content="Monthly"
               Command="{Binding ChangeCalendarModeCommand}"
               CommandParameter="{x:Static local:CalendarMode.Monthly}"/>
-      <Separator Width="10" />
+      <Separator Visibility="Hidden" Width="10" />
       <Button Content="Weekly"
               Command="{Binding ChangeCalendarModeCommand}"
               CommandParameter="{x:Static local:CalendarMode.Weekly}"/>
+      <Separator Visibility="Hidden" Width="10" />
+      <Button Content="Add Event"
+              Command="{Binding ShowAddEventCommand}"/>
     </StackPanel>
     <ScrollViewer Height="380">
       <ContentControl Content="{Binding CurrentViewModel}"/>

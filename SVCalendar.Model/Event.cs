@@ -11,5 +11,7 @@ namespace SVCalendar.Model
         public String Description { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+
+        public bool StartDateIsEarlierThanEndDate() => DateTime.Compare(StartDate, EndDate) <= 0;
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
+using SVCalendar.Model;
 using SVCalendar.WPF.View;
 
 namespace SVCalendar.WPF
@@ -9,13 +11,27 @@ namespace SVCalendar.WPF
     {
         public MainWindowViewModel()
         {
+            _repo = new EventsRepository();
+            _weekGridViewModel = new WeekGridViewModel(_repo);
+            _monthGridViewModel = new MonthGridViewModel(_repo);
+            _addEventViewModel = new AddEventViewModel(_repo);
             CurrentViewModel = _monthGridViewModel;
-            ChangeCalendarModeCommand = new RelayCommand<CalendarMode>(OnChangeCalendarMode);
+            
+            ChangeCalendarModeCommand = new RelayCommand<CalendarMode>(OnChangeCalendarModeSelected);
+            ShowAddEventCommand = new RelayCommand(OnShowAddEventSelected);
+
+            Trace.WriteLine(_repo.GetEvents().Count);
         }
-        private readonly MonthGridViewModel _monthGridViewModel = new MonthGridViewModel();
-        private readonly WeekGridViewModel _weekGridViewModel = new WeekGridViewModel();
+
+        private void OnShowAddEventSelected() => CurrentViewModel = _addEventViewModel;
+
+        private EventsRepository _repo;
+        private readonly MonthGridViewModel _monthGridViewModel;
+        private readonly WeekGridViewModel _weekGridViewModel;
+        private readonly AddEventViewModel _addEventViewModel;
 
         public RelayCommand<CalendarMode> ChangeCalendarModeCommand { get; private set; }
+        
 
 
         private BindableBase _currentViewModel;
@@ -25,17 +41,16 @@ namespace SVCalendar.WPF
             set => SetProperty(ref _currentViewModel, value);
         }
 
-        private void OnChangeCalendarMode(CalendarMode mode)
+        public RelayCommand ShowAddEventCommand { get; }
+
+        private void OnChangeCalendarModeSelected(CalendarMode mode)
         {
-            switch (mode)
+            CurrentViewModel = mode switch
             {
-                case CalendarMode.Monthly:
-                    CurrentViewModel = _monthGridViewModel;
-                    break;
-                case CalendarMode.Weekly:
-                    CurrentViewModel = _weekGridViewModel;
-                    break;
-            }
+                CalendarMode.Monthly => _monthGridViewModel,
+                CalendarMode.Weekly => _weekGridViewModel,
+                _ => CurrentViewModel
+            };
         }
     }
 

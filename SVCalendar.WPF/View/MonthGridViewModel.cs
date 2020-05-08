@@ -5,20 +5,22 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows.Media;
+using SVCalendar.Model;
 using SVCalendar.WPF.Annotations;
 
 namespace SVCalendar.WPF.View
 {
     class MonthGridViewModel : BindableBase
     {
-
-        public MonthGridViewModel()
+        public MonthGridViewModel(IEventsRepository eventsRepository)
         {
+            _eventsRepository = eventsRepository;
             CurrentDate = DateTime.Today;
             MonthDays = InitializeDays();
             NextMonthCommand = new RelayCommand(OnNextMonthSelected);
             PreviousMonthCommand = new RelayCommand(OnPreviousMonthSelected);
         }
+        private IEventsRepository _eventsRepository;
 
         private void OnPreviousMonthSelected()
         {
@@ -124,5 +126,7 @@ namespace SVCalendar.WPF.View
             DayOfWeek.Sunday => Brushes.LightCoral,
             _ => Brushes.LightBlue
         };
+
+        public List<Event> DayEvents { get; set; }
     }
 }

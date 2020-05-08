@@ -6,9 +6,6 @@
              xmlns:local="clr-namespace:SVCalendar.WPF.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-  <UserControl.DataContext>
-    <local:MonthGridViewModel/>
-  </UserControl.DataContext>
   <UserControl.Resources>
     <DataTemplate x:Key="DayBlockTemplate">
       <Border BorderThickness="1" BorderBrush="Black">

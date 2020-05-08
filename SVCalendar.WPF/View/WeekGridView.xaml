@@ -4,15 +4,25 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SVCalendar.WPF.View"
+             xmlns:model="clr-namespace:SVCalendar.Model;assembly=SVCalendar.Model"
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="800">
-  <UserControl.DataContext>
-    <local:WeekGridViewModel />
-  </UserControl.DataContext>
   <UserControl.Resources>
+    <DataTemplate DataType="{x:Type model:Event}">
+      <TextBlock Text="{Binding Title}" />
+    </DataTemplate>
     <DataTemplate x:Key="HalfHourTemplate">
       <Border BorderThickness="0.1" BorderBrush="Black">
-        <TextBlock Text="30"/>
+        <StackPanel Orientation="Horizontal">
+          <TextBlock Text="{Binding TimeText}"/>
+          <ItemsControl ItemsSource="{Binding Events}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <UniformGrid Columns="1" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+          </ItemsControl>
+        </StackPanel>
       </Border>
     </DataTemplate>
     <DataTemplate x:Key="DayColumnTemplate">
@@ -32,7 +42,15 @@
       </Border>
     </DataTemplate>
   </UserControl.Resources>
-  <Grid>
+  <StackPanel Orientation="Vertical">
+    <Separator Visibility="Hidden" Height="10"/>
+    <StackPanel Orientation="Horizontal">
+      <Separator Visibility="Hidden" Width="90"/>
+      <Button Content="Previous" Width="50" Command="{Binding PreviousWeekCommand}"/>
+      <Separator Visibility="Hidden" Width="100"/>
+      <Separator Visibility="Hidden" Width="100" />
+      <Button Content="Next" Width="50" Command="{Binding NextWeekCommand}"/>
+    </StackPanel>
     <ItemsControl ItemsSource="{Binding WeekDays}" ItemTemplate="{StaticResource DayColumnTemplate}">
       <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>
@@ -40,5 +58,5 @@
         </ItemsPanelTemplate>
       </ItemsControl.ItemsPanel>
     </ItemsControl>
-  </Grid>
+  </StackPanel>
 </UserControl>
