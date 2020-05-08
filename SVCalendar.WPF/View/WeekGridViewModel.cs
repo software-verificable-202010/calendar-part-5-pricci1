@@ -11,6 +11,7 @@ namespace SVCalendar.WPF.View
         public WeekGridViewModel(IEventsRepository eventsRepository)
         {
             CurrentDay = DateTime.Today;
+            MonthYearText = $"{_monthNames[CurrentDay.Month - 1]} {CurrentDay.Year}";
             Events = eventsRepository.GetEvents(); //TODO: do everything with SQL
 
             NextWeekCommand = new RelayCommand(OnNextWeekSelected);
@@ -19,10 +20,16 @@ namespace SVCalendar.WPF.View
             InitializeWeekDays();
         }
 
+        public string MonthYearText
+        {
+            get => _monthYearText;
+            set => SetProperty(ref _monthYearText, value);
+        }
+
         private void InitializeWeekDays()
         {
             var tempWeekDays = new List<WeekDay>();
-            DateTime monday = getMondayOfCurrentWeek(CurrentDay);
+            DateTime monday = GetMondayOfCurrentWeek(CurrentDay);
             const int daysInWeek = 7;
             for (int i = 0; i < daysInWeek; i++)
             {
@@ -35,13 +42,21 @@ namespace SVCalendar.WPF.View
 
         public IEnumerable<Event> Events { get; set; }
 
-        private DateTime getMondayOfCurrentWeek(DateTime currentDay)
+        private DateTime GetMondayOfCurrentWeek(DateTime currentDay)
         {
             var currentDayOfWeek = currentDay.DayOfWeek;
             return currentDay.AddDays(-1 * (int) currentDayOfWeek + 1);
         }
 
-        public DateTime CurrentDay { get; set; }
+        public DateTime CurrentDay
+        {
+            get => _currentDay;
+            set
+            {
+                _currentDay = value;
+                MonthYearText = $"{_monthNames[value.Month - 1]} {value.Year}";
+            }
+        }
 
         private void OnPreviousWeekSelected()
         {
@@ -66,6 +81,14 @@ namespace SVCalendar.WPF.View
             get => _weekDays;
             set => SetProperty(ref _weekDays, value);
         }
+
+        private readonly string[] _monthNames = {
+            "January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
+            "November", "December"
+        };
+
+        private DateTime _currentDay;
+        private string _monthYearText;
     }
 
     class WeekDay

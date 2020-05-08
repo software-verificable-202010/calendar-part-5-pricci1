@@ -48,6 +48,7 @@
       <Separator Visibility="Hidden" Width="90"/>
       <Button Content="Previous" Width="50" Command="{Binding PreviousWeekCommand}"/>
       <Separator Visibility="Hidden" Width="100"/>
+      <TextBlock Text="{Binding MonthYearText}" />
       <Separator Visibility="Hidden" Width="100" />
       <Button Content="Next" Width="50" Command="{Binding NextWeekCommand}"/>
     </StackPanel>
