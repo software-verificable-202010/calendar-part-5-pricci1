@@ -9,8 +9,9 @@
   <UserControl.Resources>
     <DataTemplate x:Key="DayBlockTemplate">
       <Border BorderThickness="1" BorderBrush="Black">
-        <StackPanel>
-          <TextBlock Text="{Binding DayNumberText}" Background="{Binding Color}" Width="98"></TextBlock>
+        <StackPanel Background="{Binding Color}" Width="98">
+          <TextBlock Text="{Binding DayNumberText}"></TextBlock>
+          <TextBlock Text="{Binding EventsCount}"></TextBlock>
         </StackPanel>
       </Border>
     </DataTemplate>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows.Media;
@@ -14,13 +15,14 @@ namespace SVCalendar.WPF.View
     {
         public MonthGridViewModel(IEventsRepository eventsRepository)
         {
-            _eventsRepository = eventsRepository;
+            Events = eventsRepository.GetEvents();
             CurrentDate = DateTime.Today;
             MonthDays = InitializeDays();
             NextMonthCommand = new RelayCommand(OnNextMonthSelected);
             PreviousMonthCommand = new RelayCommand(OnPreviousMonthSelected);
         }
-        private IEventsRepository _eventsRepository;
+
+        public List<Event> Events { get; set; }
 
         private void OnPreviousMonthSelected()
         {
@@ -83,12 +85,12 @@ namespace SVCalendar.WPF.View
 
             for (int i = 1; i < adjustedFirstWeekDayOfCurrentMonth + 1; i++)
             {
-                monthDays.Add(new DayBlock(null));
+                monthDays.Add(new DayBlock(null, null));
             }
 
             for (int i = 1; i <= daysInCurrentMonth; i++)
             {
-                monthDays.Add(new DayBlock(firstDayOfCurrentMonth.AddDays(i - 1)));
+                monthDays.Add(new DayBlock(firstDayOfCurrentMonth.AddDays(i - 1), Events));
             }
 
             return monthDays;
@@ -112,10 +114,36 @@ namespace SVCalendar.WPF.View
 
     internal class DayBlock
     {
-        public DayBlock(DateTime? date = null)
+        public DayBlock(DateTime? date = null, [CanBeNull] List<Event> events = null)
         {
             Date = date;
+            
+            if (date != null && events != null)
+            {
+                SetDayEventsCount(events);
+            }
+            else
+            {
+                EventsCount = "";
+            }
         }
+
+        private void SetDayEventsCount(List<Event> events)
+        {
+            var numEvents = events.Count(anEvent => Date != null && EventHappensInCurrentDay(anEvent, (DateTime)Date));
+            EventsCount = numEvents > 0 ? new string('•', numEvents) : "";
+        }
+
+        private bool EventHappensInCurrentDay(Event anEvent, DateTime date)
+        {
+            {
+                var eventStartsBefore = DateTime.Compare(anEvent.StartDate, date) <= 0;
+                var eventEndsAfter = DateTime.Compare(date, anEvent.EndDate) <= 0;
+                return eventStartsBefore && eventEndsAfter;
+            }
+        }
+
+        public string EventsCount { get; set; }
 
         public DateTime? Date { get; set; }
         public int DayNumber => Date?.Day ?? -1;
@@ -126,7 +154,5 @@ namespace SVCalendar.WPF.View
             DayOfWeek.Sunday => Brushes.LightCoral,
             _ => Brushes.LightBlue
         };
-
-        public List<Event> DayEvents { get; set; }
     }
 }
