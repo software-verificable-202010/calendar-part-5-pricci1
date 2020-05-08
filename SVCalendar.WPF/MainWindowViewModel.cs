@@ -11,23 +11,32 @@ namespace SVCalendar.WPF
     {
         public MainWindowViewModel()
         {
-            _repo = new EventsRepository();
-            _weekGridViewModel = new WeekGridViewModel(_repo);
-            _monthGridViewModel = new MonthGridViewModel(_repo);
-            _addEventViewModel = new AddEventViewModel(_repo);
+            
+            _eventsRepository = new EventsRepository();
+            _weekGridViewModel = new WeekGridViewModel(_eventsRepository);
+            _monthGridViewModel = new MonthGridViewModel(_eventsRepository);
+            _addEventViewModel = new AddEventViewModel(_eventsRepository);
             CurrentViewModel = _monthGridViewModel;
             
             ChangeCalendarModeCommand = new RelayCommand<CalendarMode>(OnChangeCalendarModeSelected);
             ShowAddEventCommand = new RelayCommand(OnShowAddEventSelected);
+            RefreshCommand = new RelayCommand(OnRefreshSelected);
+        }
 
-            Trace.WriteLine(_repo.GetEvents().Count);
+        private IEventsRepository _eventsRepository;
+
+        private void OnRefreshSelected()
+        {
+            _weekGridViewModel = new WeekGridViewModel(_eventsRepository);
+            _monthGridViewModel = new MonthGridViewModel(_eventsRepository);
+            OnPropertyChanged("_weekGridViewModel");
+            OnPropertyChanged("_monthGridViewModel");
         }
 
         private void OnShowAddEventSelected() => CurrentViewModel = _addEventViewModel;
 
-        private EventsRepository _repo;
-        private readonly MonthGridViewModel _monthGridViewModel;
-        private readonly WeekGridViewModel _weekGridViewModel;
+        private MonthGridViewModel _monthGridViewModel;
+        private WeekGridViewModel _weekGridViewModel;
         private readonly AddEventViewModel _addEventViewModel;
 
         public RelayCommand<CalendarMode> ChangeCalendarModeCommand { get; private set; }
@@ -42,6 +51,8 @@ namespace SVCalendar.WPF
         }
 
         public RelayCommand ShowAddEventCommand { get; }
+
+        public RelayCommand RefreshCommand { get; }
 
         private void OnChangeCalendarModeSelected(CalendarMode mode)
         {

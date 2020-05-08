@@ -35,6 +35,9 @@
       <Separator Visibility="Hidden" Width="10" />
       <Button Content="Add Event"
               Command="{Binding ShowAddEventCommand}"/>
+      <Separator Visibility="Hidden" Width="10" />
+      <Button Content="Refresh"
+              Command="{Binding RefreshCommand}"/>
     </StackPanel>
     <ScrollViewer Height="380">
       <ContentControl Content="{Binding CurrentViewModel}"/>
