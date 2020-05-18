@@ -13,10 +13,10 @@ namespace SVCalendar.WPF
         {
             
             _eventsRepository = new EventsRepository();
-            _weekGridViewModel = new WeekGridViewModel(_eventsRepository);
-            _monthGridViewModel = new MonthGridViewModel(_eventsRepository);
+            WeekGridViewModel = new WeekGridViewModel(_eventsRepository);
+            MonthGridViewModel = new MonthGridViewModel(_eventsRepository);
             _addEventViewModel = new AddEventViewModel(_eventsRepository);
-            CurrentViewModel = _monthGridViewModel;
+            CurrentViewModel = MonthGridViewModel;
             
             ChangeCalendarModeCommand = new RelayCommand<CalendarMode>(OnChangeCalendarModeSelected);
             ShowAddEventCommand = new RelayCommand(OnShowAddEventSelected);
@@ -27,16 +27,24 @@ namespace SVCalendar.WPF
 
         private void OnRefreshSelected()
         {
-            _weekGridViewModel = new WeekGridViewModel(_eventsRepository);
-            _monthGridViewModel = new MonthGridViewModel(_eventsRepository);
-            OnPropertyChanged("_weekGridViewModel");
-            OnPropertyChanged("_monthGridViewModel");
+            WeekGridViewModel = new WeekGridViewModel(_eventsRepository);
+            MonthGridViewModel = new MonthGridViewModel(_eventsRepository);
         }
 
         private void OnShowAddEventSelected() => CurrentViewModel = _addEventViewModel;
 
-        private MonthGridViewModel _monthGridViewModel;
-        private WeekGridViewModel _weekGridViewModel;
+        private MonthGridViewModel MonthGridViewModel
+        {
+            get => _monthGridViewModel;
+            set => SetProperty(ref _monthGridViewModel, value);
+        }
+
+        private WeekGridViewModel WeekGridViewModel
+        {
+            get => _weekGridViewModel;
+            set => SetProperty(ref _weekGridViewModel, value);
+        }
+
         private readonly AddEventViewModel _addEventViewModel;
 
         public RelayCommand<CalendarMode> ChangeCalendarModeCommand { get; private set; }
@@ -44,6 +52,9 @@ namespace SVCalendar.WPF
 
 
         private BindableBase _currentViewModel;
+        private MonthGridViewModel _monthGridViewModel;
+        private WeekGridViewModel _weekGridViewModel;
+
         public BindableBase CurrentViewModel
         {
             get => _currentViewModel;
@@ -58,8 +69,8 @@ namespace SVCalendar.WPF
         {
             CurrentViewModel = mode switch
             {
-                CalendarMode.Monthly => _monthGridViewModel,
-                CalendarMode.Weekly => _weekGridViewModel,
+                CalendarMode.Monthly => MonthGridViewModel,
+                CalendarMode.Weekly => WeekGridViewModel,
                 _ => CurrentViewModel
             };
         }

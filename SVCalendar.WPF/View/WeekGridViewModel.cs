@@ -11,7 +11,6 @@ namespace SVCalendar.WPF.View
         public WeekGridViewModel(IEventsRepository eventsRepository)
         {
             CurrentDay = DateTime.Today;
-            MonthYearText = $"{_monthNames[CurrentDay.Month - 1]} {CurrentDay.Year}";
             Events = eventsRepository.GetEvents(); //TODO: do everything with SQL
 
             NextWeekCommand = new RelayCommand(OnNextWeekSelected);
@@ -111,8 +110,8 @@ namespace SVCalendar.WPF.View
 
         private bool EventHappensInCurrentDay(Event anEvent)
         {
-            var eventStartsBefore = DateTime.Compare(anEvent.StartDate, CurrentDay) <= 0;
-            var eventEndsAfter = DateTime.Compare(CurrentDay, anEvent.EndDate) <= 0;
+            var eventStartsBefore = DateTime.Compare(anEvent.StartDate.Date, CurrentDay.Date) <= 0;
+            var eventEndsAfter = DateTime.Compare(CurrentDay.Date, anEvent.EndDate.Date) <= 0;
             return eventStartsBefore && eventEndsAfter;
         }
 
@@ -148,12 +147,20 @@ namespace SVCalendar.WPF.View
         {
             _dayEvents = dayEvents;
             CorrespondingHalfHour = correspondingHalfHour;
-            TimeText = $"{CorrespondingHalfHour.Hour}:{CorrespondingHalfHour.Minute}";
+            SetFormattedTimeText();
             SetCorrespondingEvents();
         }
 
         public string TimeText { get; set; }
         public List<Event> Events { get; set; }
+
+        private void SetFormattedTimeText()
+        {
+            // HH:MM
+            var hourText = CorrespondingHalfHour.Hour.ToString().Length > 1 ? CorrespondingHalfHour.Hour.ToString() : $"0{CorrespondingHalfHour.Hour}";
+            var minuteText = CorrespondingHalfHour.Minute.ToString().Length > 1 ? CorrespondingHalfHour.Minute.ToString() : $"0{CorrespondingHalfHour.Minute}";
+            TimeText = $"{hourText}:{minuteText} ";
+        }
 
         private void SetCorrespondingEvents()
         {
@@ -165,7 +172,7 @@ namespace SVCalendar.WPF.View
         private bool IsHalfHourInsideEventTime(Event anEvent)
         {
             var eventEndsAfter = DateTime.Compare(CorrespondingHalfHour, anEvent.EndDate) <= 0;
-            var eventStartsBefore = DateTime.Compare(anEvent.StartDate, CorrespondingHalfHour) <= 0;
+            var eventStartsBefore = DateTime.Compare(anEvent.StartDate.AddMinutes(-30), CorrespondingHalfHour) <= 0;
             return eventStartsBefore && eventEndsAfter;
         }
     }

@@ -124,26 +124,26 @@ namespace SVCalendar.WPF.View
             }
             else
             {
-                EventsCount = "";
+                EventsCountDisplay = "";
             }
         }
 
         private void SetDayEventsCount(List<Event> events)
         {
-            var numEvents = events.Count(anEvent => Date != null && EventHappensInCurrentDay(anEvent, (DateTime)Date));
-            EventsCount = numEvents > 0 ? new string('•', numEvents) : "";
+            var numberEvents = events.Count(anEvent => Date != null && EventHappensInCurrentDay(anEvent, (DateTime)Date));
+            EventsCountDisplay = numberEvents > 0 ? new string('•', numberEvents) : "";
         }
 
         private bool EventHappensInCurrentDay(Event anEvent, DateTime date)
         {
             {
-                var eventStartsBefore = DateTime.Compare(anEvent.StartDate, date) <= 0;
-                var eventEndsAfter = DateTime.Compare(date, anEvent.EndDate) <= 0;
+                var eventStartsBefore = DateTime.Compare(anEvent.StartDate.Date, date.Date) <= 0;
+                var eventEndsAfter = DateTime.Compare(date.Date, anEvent.EndDate.Date) <= 0;
                 return eventStartsBefore && eventEndsAfter;
             }
         }
 
-        public string EventsCount { get; set; }
+        public string EventsCountDisplay { get; set; }
 
         public DateTime? Date { get; set; }
         public int DayNumber => Date?.Day ?? -1;
