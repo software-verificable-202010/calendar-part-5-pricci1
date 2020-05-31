@@ -1,13 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using SVCalendar.Model;
 
 namespace SVCalendar.WPF.View
 {
     class WeekGridViewModel : BindableBase
     {
+        private readonly string[] _monthNames =
+        {
+            "January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
+            "November", "December"
+        };
+
+        private DateTime _currentDay;
+        private string _monthYearText;
+
+        private List<WeekDay> _weekDays;
+
         public WeekGridViewModel(IEventsRepository eventsRepository)
         {
             CurrentDay = DateTime.Today;
@@ -15,7 +25,7 @@ namespace SVCalendar.WPF.View
 
             NextWeekCommand = new RelayCommand(OnNextWeekSelected);
             PreviousWeekCommand = new RelayCommand(OnPreviousWeekSelected);
-            
+
             InitializeWeekDays();
         }
 
@@ -25,27 +35,7 @@ namespace SVCalendar.WPF.View
             set => SetProperty(ref _monthYearText, value);
         }
 
-        private void InitializeWeekDays()
-        {
-            var tempWeekDays = new List<WeekDay>();
-            DateTime monday = GetMondayOfCurrentWeek(CurrentDay);
-            const int daysInWeek = 7;
-            for (int i = 0; i < daysInWeek; i++)
-            {
-                var day = monday.AddDays(i);
-                tempWeekDays.Add(new WeekDay(day, Events));
-            }
-
-            WeekDays = tempWeekDays;
-        }
-
         public IEnumerable<Event> Events { get; set; }
-
-        private DateTime GetMondayOfCurrentWeek(DateTime currentDay)
-        {
-            var currentDayOfWeek = currentDay.DayOfWeek;
-            return currentDay.AddDays(-1 * (int) currentDayOfWeek + 1);
-        }
 
         public DateTime CurrentDay
         {
@@ -55,6 +45,36 @@ namespace SVCalendar.WPF.View
                 _currentDay = value;
                 MonthYearText = $"{_monthNames[value.Month - 1]} {value.Year}";
             }
+        }
+
+        public RelayCommand PreviousWeekCommand { get; set; }
+
+        public RelayCommand NextWeekCommand { get; set; }
+
+        public List<WeekDay> WeekDays
+        {
+            get => _weekDays;
+            set => SetProperty(ref _weekDays, value);
+        }
+
+        private void InitializeWeekDays()
+        {
+            var tempWeekDays = new List<WeekDay>();
+            DateTime monday = GetMondayOfCurrentWeek(CurrentDay);
+            const int daysInWeek = 7;
+            for (var i = 0; i < daysInWeek; i++)
+            {
+                DateTime day = monday.AddDays(i);
+                tempWeekDays.Add(new WeekDay(day, Events));
+            }
+
+            WeekDays = tempWeekDays;
+        }
+
+        private DateTime GetMondayOfCurrentWeek(DateTime currentDay)
+        {
+            DayOfWeek currentDayOfWeek = currentDay.DayOfWeek;
+            return currentDay.AddDays(-1 * (int) currentDayOfWeek + 1);
         }
 
         private void OnPreviousWeekSelected()
@@ -68,29 +88,9 @@ namespace SVCalendar.WPF.View
             CurrentDay = CurrentDay.AddDays(7);
             InitializeWeekDays();
         }
-
-        public RelayCommand PreviousWeekCommand { get; set; }
-
-        public RelayCommand NextWeekCommand { get; set; }
-
-        private List<WeekDay> _weekDays;
-
-        public List<WeekDay> WeekDays
-        {
-            get => _weekDays;
-            set => SetProperty(ref _weekDays, value);
-        }
-
-        private readonly string[] _monthNames = {
-            "January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
-            "November", "December"
-        };
-
-        private DateTime _currentDay;
-        private string _monthYearText;
     }
 
-    class WeekDay
+    internal class WeekDay
     {
         public WeekDay(DateTime day, IEnumerable<Event> events)
         {
@@ -103,6 +103,14 @@ namespace SVCalendar.WPF.View
             InitializeHalfHours();
         }
 
+        public DateTime CurrentDay { get; set; }
+
+        public string DayName { get; set; }
+        public string DayNumber { get; set; }
+
+        public List<HalfHour> HalfHours { get; set; }
+        public IEnumerable<Event> DayEvents { get; set; }
+
         private void SetCurrentDayEvents(IEnumerable<Event> events)
         {
             DayEvents = events.Where(EventHappensInCurrentDay);
@@ -110,38 +118,28 @@ namespace SVCalendar.WPF.View
 
         private bool EventHappensInCurrentDay(Event anEvent)
         {
-            var eventStartsBefore = DateTime.Compare(anEvent.StartDate.Date, CurrentDay.Date) <= 0;
-            var eventEndsAfter = DateTime.Compare(CurrentDay.Date, anEvent.EndDate.Date) <= 0;
+            bool eventStartsBefore = DateTime.Compare(anEvent.StartDate.Date, CurrentDay.Date) <= 0;
+            bool eventEndsAfter = DateTime.Compare(CurrentDay.Date, anEvent.EndDate.Date) <= 0;
             return eventStartsBefore && eventEndsAfter;
         }
-
-        public DateTime CurrentDay { get; set; }
-
-        public String DayName { get; set; }
-        public String DayNumber { get; set; }
-
-        public List<HalfHour> HalfHours { get; set; }
-        public IEnumerable<Event> DayEvents { get; set; }
 
         private void InitializeHalfHours()
         {
             var tempHalfHours = new List<HalfHour>();
             const int halfHoursInDay = 48;
-            for (int i = 0; i < halfHoursInDay; i++)
+            for (var i = 0; i < halfHoursInDay; i++)
             {
-                var halfHour = CurrentDay.AddMinutes(i * 30);
+                DateTime halfHour = CurrentDay.AddMinutes(i * 30);
                 tempHalfHours.Add(new HalfHour(DayEvents, halfHour));
             }
 
             HalfHours = tempHalfHours;
         }
-
     }
 
     public class HalfHour
     {
         private readonly IEnumerable<Event> _dayEvents;
-        private DateTime CorrespondingHalfHour { get; set; }
 
         public HalfHour(IEnumerable<Event> dayEvents, DateTime correspondingHalfHour)
         {
@@ -151,28 +149,34 @@ namespace SVCalendar.WPF.View
             SetCorrespondingEvents();
         }
 
+        private DateTime CorrespondingHalfHour { get; }
+
         public string TimeText { get; set; }
         public List<Event> Events { get; set; }
 
         private void SetFormattedTimeText()
         {
             // HH:MM
-            var hourText = CorrespondingHalfHour.Hour.ToString().Length > 1 ? CorrespondingHalfHour.Hour.ToString() : $"0{CorrespondingHalfHour.Hour}";
-            var minuteText = CorrespondingHalfHour.Minute.ToString().Length > 1 ? CorrespondingHalfHour.Minute.ToString() : $"0{CorrespondingHalfHour.Minute}";
+            string hourText = CorrespondingHalfHour.Hour.ToString().Length > 1
+                ? CorrespondingHalfHour.Hour.ToString()
+                : $"0{CorrespondingHalfHour.Hour}";
+            string minuteText = CorrespondingHalfHour.Minute.ToString().Length > 1
+                ? CorrespondingHalfHour.Minute.ToString()
+                : $"0{CorrespondingHalfHour.Minute}";
             TimeText = $"{hourText}:{minuteText} ";
         }
 
         private void SetCorrespondingEvents()
         {
             Events = new List<Event>();
-            var events = _dayEvents.Where(IsHalfHourInsideEventTime);
+            IEnumerable<Event> events = _dayEvents.Where(IsHalfHourInsideEventTime);
             Events.AddRange(events);
         }
 
         private bool IsHalfHourInsideEventTime(Event anEvent)
         {
-            var eventEndsAfter = DateTime.Compare(CorrespondingHalfHour, anEvent.EndDate) <= 0;
-            var eventStartsBefore = DateTime.Compare(anEvent.StartDate.AddMinutes(-30), CorrespondingHalfHour) <= 0;
+            bool eventEndsAfter = DateTime.Compare(CorrespondingHalfHour, anEvent.EndDate) <= 0;
+            bool eventStartsBefore = DateTime.Compare(anEvent.StartDate.AddMinutes(-30), CorrespondingHalfHour) <= 0;
             return eventStartsBefore && eventEndsAfter;
         }
     }

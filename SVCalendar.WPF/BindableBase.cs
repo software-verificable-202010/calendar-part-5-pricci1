@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
 using SVCalendar.WPF.Annotations;
 
 namespace SVCalendar.WPF
@@ -21,7 +18,10 @@ namespace SVCalendar.WPF
         protected virtual void SetProperty<T>(ref T member, T val,
             [CallerMemberName] string propertyName = null)
         {
-            if (object.Equals(member, val)) return;
+            if (Equals(member, val))
+            {
+                return;
+            }
 
             member = val;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

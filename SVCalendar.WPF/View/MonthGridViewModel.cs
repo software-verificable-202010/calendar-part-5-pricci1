@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Windows.Media;
 using SVCalendar.Model;
 using SVCalendar.WPF.Annotations;
@@ -13,6 +9,18 @@ namespace SVCalendar.WPF.View
 {
     class MonthGridViewModel : BindableBase
     {
+        private readonly string[] _monthNames =
+        {
+            "January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
+            "November", "December"
+        };
+
+        private DateTime _currentDate;
+
+        private List<DayBlock> _monthDays;
+
+        private string _monthYearText;
+
         public MonthGridViewModel(IEventsRepository eventsRepository)
         {
             Events = eventsRepository.GetEvents();
@@ -23,6 +31,41 @@ namespace SVCalendar.WPF.View
         }
 
         public List<Event> Events { get; set; }
+
+        public List<DayBlock> MonthDays
+        {
+            get => _monthDays;
+            set
+            {
+                _monthDays = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public DateTime CurrentDate
+        {
+            get => _currentDate;
+            private set
+            {
+                _currentDate = value;
+                OnPropertyChanged();
+                MonthYearText = $"{_monthNames[value.Month - 1]} {value.Year}";
+            }
+        }
+
+        public string MonthYearText
+        {
+            get => _monthYearText;
+            private set
+            {
+                _monthYearText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public RelayCommand NextMonthCommand { get; }
+
+        public RelayCommand PreviousMonthCommand { get; }
 
         private void OnPreviousMonthSelected()
         {
@@ -36,59 +79,22 @@ namespace SVCalendar.WPF.View
             MonthDays = InitializeDays();
         }
 
-        private List<DayBlock> _monthDays;
-        public List<DayBlock> MonthDays
-        {
-            get => _monthDays;
-            set
-            {
-                _monthDays = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private DateTime _currentDate;
-        public DateTime CurrentDate
-        {
-            get => _currentDate;
-            private set
-            {
-                _currentDate = value;
-                OnPropertyChanged();
-                MonthYearText = $"{_monthNames[value.Month - 1]} {value.Year}";
-            }
-        }
-
-        public String MonthYearText
-        {
-            get => _monthYearText;
-            private set
-            {
-                _monthYearText = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public RelayCommand NextMonthCommand { get; private set; }
-
-        public RelayCommand PreviousMonthCommand { get; private set; }
-
         public List<DayBlock> InitializeDays()
         {
             var monthDays = new List<DayBlock>();
             int daysInCurrentMonth = DateTime.DaysInMonth(CurrentDate.Year, CurrentDate.Month);
             DateTime firstDayOfCurrentMonth = CurrentDate.AddDays(-1 * CurrentDate.Day + 1);
-            int firstWeekDayOfCurrentMonth = (int)CurrentDate.AddDays(-1 * CurrentDate.Day + 1).DayOfWeek;
-            
+            var firstWeekDayOfCurrentMonth = (int) CurrentDate.AddDays(-1 * CurrentDate.Day + 1).DayOfWeek;
+
             int adjustedFirstWeekDayOfCurrentMonth =
                 AdjustFirstWeekDayOfCurrentMonth(firstWeekDayOfCurrentMonth);
 
-            for (int i = 1; i < adjustedFirstWeekDayOfCurrentMonth + 1; i++)
+            for (var i = 1; i < adjustedFirstWeekDayOfCurrentMonth + 1; i++)
             {
-                monthDays.Add(new DayBlock(null, null));
+                monthDays.Add(new DayBlock());
             }
 
-            for (int i = 1; i <= daysInCurrentMonth; i++)
+            for (var i = 1; i <= daysInCurrentMonth; i++)
             {
                 monthDays.Add(new DayBlock(firstDayOfCurrentMonth.AddDays(i - 1), Events));
             }
@@ -99,17 +105,10 @@ namespace SVCalendar.WPF.View
         private int AdjustFirstWeekDayOfCurrentMonth(int firstWeekDayOfCurrentMonth)
         {
             // Make 0 = Monday, ... 6 = Sunday
-            int sundayOldValue = 0;
-            int sundayNewValue = 6;
+            var sundayOldValue = 0;
+            var sundayNewValue = 6;
             return firstWeekDayOfCurrentMonth == sundayOldValue ? sundayNewValue : firstWeekDayOfCurrentMonth - 1;
         }
-
-        private readonly string[] _monthNames = {
-            "January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
-            "November", "December"
-        };
-
-        private string _monthYearText;
     }
 
     internal class DayBlock
@@ -117,7 +116,7 @@ namespace SVCalendar.WPF.View
         public DayBlock(DateTime? date = null, [CanBeNull] List<Event> events = null)
         {
             Date = date;
-            
+
             if (date != null && events != null)
             {
                 SetDayEventsCount(events);
@@ -128,31 +127,33 @@ namespace SVCalendar.WPF.View
             }
         }
 
-        private void SetDayEventsCount(List<Event> events)
-        {
-            var numberEvents = events.Count(anEvent => Date != null && EventHappensInCurrentDay(anEvent, (DateTime)Date));
-            EventsCountDisplay = numberEvents > 0 ? new string('•', numberEvents) : "";
-        }
-
-        private bool EventHappensInCurrentDay(Event anEvent, DateTime date)
-        {
-            {
-                var eventStartsBefore = DateTime.Compare(anEvent.StartDate.Date, date.Date) <= 0;
-                var eventEndsAfter = DateTime.Compare(date.Date, anEvent.EndDate.Date) <= 0;
-                return eventStartsBefore && eventEndsAfter;
-            }
-        }
-
         public string EventsCountDisplay { get; set; }
 
         public DateTime? Date { get; set; }
         public int DayNumber => Date?.Day ?? -1;
-        public String DayNumberText => DayNumber > 0 ? DayNumber.ToString() : "";
+        public string DayNumberText => DayNumber > 0 ? DayNumber.ToString() : "";
+
         public SolidColorBrush Color => Date?.DayOfWeek switch
         {
             DayOfWeek.Saturday => Brushes.LightCoral,
             DayOfWeek.Sunday => Brushes.LightCoral,
             _ => Brushes.LightBlue
         };
+
+        private void SetDayEventsCount(List<Event> events)
+        {
+            int numberEvents =
+                events.Count(anEvent => Date != null && EventHappensInCurrentDay(anEvent, (DateTime) Date));
+            EventsCountDisplay = numberEvents > 0 ? new string('•', numberEvents) : "";
+        }
+
+        private bool EventHappensInCurrentDay(Event anEvent, DateTime date)
+        {
+            {
+                bool eventStartsBefore = DateTime.Compare(anEvent.StartDate.Date, date.Date) <= 0;
+                bool eventEndsAfter = DateTime.Compare(date.Date, anEvent.EndDate.Date) <= 0;
+                return eventStartsBefore && eventEndsAfter;
+            }
+        }
     }
 }

@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using SVCalendar.Model;
 
 namespace SVCalendar.WPF.View
 {
     class AddEventViewModel : BindableBase
     {
-        private IEventsRepository _eventsRepository;
+        private readonly IEventsRepository _eventsRepository;
         private Event _newEvent;
 
         public AddEventViewModel(IEventsRepository eventsRepository)
@@ -19,15 +17,6 @@ namespace SVCalendar.WPF.View
             InitializeNewEvent();
         }
 
-        private void InitializeNewEvent()
-        {
-            NewEvent = new Event();
-            EventTitle = "";
-            EventDescription = "";
-            EventStartDate = DateTime.Now;
-            EventEndDate = DateTime.Now;
-        }
-
         public RelayCommand SaveEventCommand { get; }
         public RelayCommand ResetEventCommand { get; }
 
@@ -37,27 +26,7 @@ namespace SVCalendar.WPF.View
             set => SetProperty(ref _newEvent, value);
         }
 
-        private void OnResetEventSelected()
-        {
-            InitializeNewEvent();
-            SaveEventCommand.RaiseCanExecuteChanged();
-        }
-
-        private bool CanSaveEvent()
-        {
-            if (String.IsNullOrWhiteSpace(NewEvent.Title)) return false;
-            if (!NewEvent.StartDateIsEarlierThanEndDate()) return false;
-            return true;
-        }
-
-        private void OnSaveEventSelected()
-        {
-            _eventsRepository.AddEvent(NewEvent);
-            InitializeNewEvent();
-            SaveEventCommand.RaiseCanExecuteChanged();
-        }
-
-        public String EventTitle
+        public string EventTitle
         {
             get => NewEvent.Title;
             set
@@ -68,7 +37,7 @@ namespace SVCalendar.WPF.View
             }
         }
 
-        public String EventDescription
+        public string EventDescription
         {
             get => NewEvent.Description;
             set
@@ -98,6 +67,35 @@ namespace SVCalendar.WPF.View
                 OnPropertyChanged();
                 SaveEventCommand.RaiseCanExecuteChanged();
             }
+        }
+
+        private void InitializeNewEvent()
+        {
+            NewEvent = new Event();
+            EventTitle = "";
+            EventDescription = "";
+            EventStartDate = DateTime.Now;
+            EventEndDate = DateTime.Now;
+        }
+
+        private void OnResetEventSelected()
+        {
+            InitializeNewEvent();
+            SaveEventCommand.RaiseCanExecuteChanged();
+        }
+
+        private bool CanSaveEvent()
+        {
+            if (string.IsNullOrWhiteSpace(NewEvent.Title)) return false;
+            if (!NewEvent.StartDateIsEarlierThanEndDate()) return false;
+            return true;
+        }
+
+        private void OnSaveEventSelected()
+        {
+            _eventsRepository.AddEvent(NewEvent);
+            InitializeNewEvent();
+            SaveEventCommand.RaiseCanExecuteChanged();
         }
     }
 }

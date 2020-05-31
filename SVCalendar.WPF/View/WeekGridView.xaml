@@ -1,11 +1,11 @@
 ﻿<UserControl x:Class="SVCalendar.WPF.View.WeekGridView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:SVCalendar.WPF.View"
              xmlns:model="clr-namespace:SVCalendar.Model;assembly=SVCalendar.Model"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              d:DesignHeight="500" d:DesignWidth="800">
   <UserControl.Resources>
     <DataTemplate DataType="{x:Type model:Event}">
@@ -14,7 +14,7 @@
     <DataTemplate x:Key="HalfHourTemplate">
       <Border BorderThickness="0.1" BorderBrush="Black">
         <StackPanel Orientation="Horizontal">
-          <TextBlock Text="{Binding TimeText}"/>
+          <TextBlock Text="{Binding TimeText}" />
           <ItemsControl ItemsSource="{Binding Events}">
             <ItemsControl.ItemsPanel>
               <ItemsPanelTemplate>
@@ -28,8 +28,8 @@
     <DataTemplate x:Key="DayColumnTemplate">
       <Border BorderThickness="1" BorderBrush="Black">
         <StackPanel>
-          <TextBlock Text="{Binding DayName}"/>
-          <TextBlock Text="{Binding DayNumber}"/>
+          <TextBlock Text="{Binding DayName}" />
+          <TextBlock Text="{Binding DayNumber}" />
           <Separator />
           <ItemsControl ItemsSource="{Binding HalfHours}" ItemTemplate="{StaticResource HalfHourTemplate}">
             <ItemsControl.ItemsPanel>
@@ -43,19 +43,19 @@
     </DataTemplate>
   </UserControl.Resources>
   <StackPanel Orientation="Vertical">
-    <Separator Visibility="Hidden" Height="10"/>
+    <Separator Visibility="Hidden" Height="10" />
     <StackPanel Orientation="Horizontal">
-      <Separator Visibility="Hidden" Width="90"/>
-      <Button Content="Previous" Width="50" Command="{Binding PreviousWeekCommand}"/>
-      <Separator Visibility="Hidden" Width="100"/>
+      <Separator Visibility="Hidden" Width="90" />
+      <Button Content="Previous" Width="50" Command="{Binding PreviousWeekCommand}" />
+      <Separator Visibility="Hidden" Width="100" />
       <TextBlock Text="{Binding MonthYearText}" />
       <Separator Visibility="Hidden" Width="100" />
-      <Button Content="Next" Width="50" Command="{Binding NextWeekCommand}"/>
+      <Button Content="Next" Width="50" Command="{Binding NextWeekCommand}" />
     </StackPanel>
     <ItemsControl ItemsSource="{Binding WeekDays}" ItemTemplate="{StaticResource DayColumnTemplate}">
       <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>
-          <UniformGrid Columns="7" Background="Azure"/>
+          <UniformGrid Columns="7" Background="Azure" />
         </ItemsPanelTemplate>
       </ItemsControl.ItemsPanel>
     </ItemsControl>
