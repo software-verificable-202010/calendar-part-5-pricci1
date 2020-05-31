@@ -7,21 +7,21 @@ namespace SVCalendar.WPF.View
 {
     class WeekGridViewModel : BindableBase
     {
-        private readonly string[] _monthNames =
+        private readonly string[] monthNames =
         {
             "January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
             "November", "December"
         };
 
-        private DateTime _currentDay;
-        private string _monthYearText;
+        private DateTime currentDay;
+        private string monthYearText;
 
-        private List<WeekDay> _weekDays;
+        private List<WeekDay> weekDays;
 
         public WeekGridViewModel(IEventsRepository eventsRepository)
         {
             CurrentDay = DateTime.Today;
-            Events = eventsRepository.GetEvents(); //TODO: do everything with SQL
+            Events = eventsRepository.GetEvents(); // TODO: do everything with SQL.
 
             NextWeekCommand = new RelayCommand(OnNextWeekSelected);
             PreviousWeekCommand = new RelayCommand(OnPreviousWeekSelected);
@@ -31,19 +31,19 @@ namespace SVCalendar.WPF.View
 
         public string MonthYearText
         {
-            get => _monthYearText;
-            set => SetProperty(ref _monthYearText, value);
+            get => monthYearText;
+            set => SetProperty(ref monthYearText, value);
         }
 
         public IEnumerable<Event> Events { get; set; }
 
         public DateTime CurrentDay
         {
-            get => _currentDay;
+            get => currentDay;
             set
             {
-                _currentDay = value;
-                MonthYearText = $"{_monthNames[value.Month - 1]} {value.Year}";
+                currentDay = value;
+                MonthYearText = $"{monthNames[value.Month - 1]} {value.Year}";
             }
         }
 
@@ -53,16 +53,16 @@ namespace SVCalendar.WPF.View
 
         public List<WeekDay> WeekDays
         {
-            get => _weekDays;
-            set => SetProperty(ref _weekDays, value);
+            get => weekDays;
+            set => SetProperty(ref weekDays, value);
         }
 
         private void InitializeWeekDays()
         {
             var tempWeekDays = new List<WeekDay>();
             DateTime monday = GetMondayOfCurrentWeek(CurrentDay);
-            const int daysInWeek = 7;
-            for (var i = 0; i < daysInWeek; i++)
+            const int DaysInWeek = 7;
+            for (var i = 0; i < DaysInWeek; i++)
             {
                 DateTime day = monday.AddDays(i);
                 tempWeekDays.Add(new WeekDay(day, Events));
@@ -106,9 +106,11 @@ namespace SVCalendar.WPF.View
         public DateTime CurrentDay { get; set; }
 
         public string DayName { get; set; }
+
         public string DayNumber { get; set; }
 
         public List<HalfHour> HalfHours { get; set; }
+
         public IEnumerable<Event> DayEvents { get; set; }
 
         private void SetCurrentDayEvents(IEnumerable<Event> events)
@@ -126,8 +128,8 @@ namespace SVCalendar.WPF.View
         private void InitializeHalfHours()
         {
             var tempHalfHours = new List<HalfHour>();
-            const int halfHoursInDay = 48;
-            for (var i = 0; i < halfHoursInDay; i++)
+            const int HalfHoursInDay = 48;
+            for (var i = 0; i < HalfHoursInDay; i++)
             {
                 DateTime halfHour = CurrentDay.AddMinutes(i * 30);
                 tempHalfHours.Add(new HalfHour(DayEvents, halfHour));
@@ -139,11 +141,11 @@ namespace SVCalendar.WPF.View
 
     public class HalfHour
     {
-        private readonly IEnumerable<Event> _dayEvents;
+        private readonly IEnumerable<Event> dayEvents;
 
         public HalfHour(IEnumerable<Event> dayEvents, DateTime correspondingHalfHour)
         {
-            _dayEvents = dayEvents;
+            this.dayEvents = dayEvents;
             CorrespondingHalfHour = correspondingHalfHour;
             SetFormattedTimeText();
             SetCorrespondingEvents();
@@ -152,24 +154,25 @@ namespace SVCalendar.WPF.View
         private DateTime CorrespondingHalfHour { get; }
 
         public string TimeText { get; set; }
+
         public List<Event> Events { get; set; }
 
         private void SetFormattedTimeText()
         {
             // HH:MM
             string hourText = CorrespondingHalfHour.Hour.ToString().Length > 1
-                ? CorrespondingHalfHour.Hour.ToString()
-                : $"0{CorrespondingHalfHour.Hour}";
+                                  ? CorrespondingHalfHour.Hour.ToString()
+                                  : $"0{CorrespondingHalfHour.Hour}";
             string minuteText = CorrespondingHalfHour.Minute.ToString().Length > 1
-                ? CorrespondingHalfHour.Minute.ToString()
-                : $"0{CorrespondingHalfHour.Minute}";
+                                    ? CorrespondingHalfHour.Minute.ToString()
+                                    : $"0{CorrespondingHalfHour.Minute}";
             TimeText = $"{hourText}:{minuteText} ";
         }
 
         private void SetCorrespondingEvents()
         {
             Events = new List<Event>();
-            IEnumerable<Event> events = _dayEvents.Where(IsHalfHourInsideEventTime);
+            IEnumerable<Event> events = dayEvents.Where(IsHalfHourInsideEventTime);
             Events.AddRange(events);
         }
 

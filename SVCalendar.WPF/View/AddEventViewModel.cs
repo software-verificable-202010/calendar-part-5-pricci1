@@ -86,8 +86,16 @@ namespace SVCalendar.WPF.View
 
         private bool CanSaveEvent()
         {
-            if (string.IsNullOrWhiteSpace(NewEvent.Title)) return false;
-            if (!NewEvent.StartDateIsEarlierThanEndDate()) return false;
+            if (string.IsNullOrWhiteSpace(NewEvent.Title))
+            {
+                return false;
+            }
+
+            if (!NewEvent.StartDateIsEarlierThanEndDate())
+            {
+                return false;
+            }
+
             return true;
         }
 

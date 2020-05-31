@@ -9,17 +9,17 @@ namespace SVCalendar.WPF.View
 {
     class MonthGridViewModel : BindableBase
     {
-        private readonly string[] _monthNames =
+        private readonly string[] monthNames =
         {
             "January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
             "November", "December"
         };
 
-        private DateTime _currentDate;
+        private DateTime currentDate;
 
-        private List<DayBlock> _monthDays;
+        private List<DayBlock> monthDays;
 
-        private string _monthYearText;
+        private string monthYearText;
 
         public MonthGridViewModel(IEventsRepository eventsRepository)
         {
@@ -34,31 +34,31 @@ namespace SVCalendar.WPF.View
 
         public List<DayBlock> MonthDays
         {
-            get => _monthDays;
+            get => monthDays;
             set
             {
-                _monthDays = value;
+                monthDays = value;
                 OnPropertyChanged();
             }
         }
 
         public DateTime CurrentDate
         {
-            get => _currentDate;
+            get => currentDate;
             private set
             {
-                _currentDate = value;
+                currentDate = value;
                 OnPropertyChanged();
-                MonthYearText = $"{_monthNames[value.Month - 1]} {value.Year}";
+                MonthYearText = $"{monthNames[value.Month - 1]} {value.Year}";
             }
         }
 
         public string MonthYearText
         {
-            get => _monthYearText;
+            get => monthYearText;
             private set
             {
-                _monthYearText = value;
+                monthYearText = value;
                 OnPropertyChanged();
             }
         }
@@ -104,20 +104,27 @@ namespace SVCalendar.WPF.View
 
         private int AdjustFirstWeekDayOfCurrentMonth(int firstWeekDayOfCurrentMonth)
         {
-            // Make 0 = Monday, ... 6 = Sunday
-            var sundayOldValue = 0;
-            var sundayNewValue = 6;
-            return firstWeekDayOfCurrentMonth == sundayOldValue ? sundayNewValue : firstWeekDayOfCurrentMonth - 1;
+            const int SundayOldValue = 0;
+            const int SundayNewValue = 6;
+            return firstWeekDayOfCurrentMonth == SundayOldValue ? SundayNewValue : firstWeekDayOfCurrentMonth - 1;
         }
     }
 
     internal class DayBlock
     {
+        private readonly bool dayBlockHasDate;
+
         public DayBlock(DateTime? date = null, [CanBeNull] List<Event> events = null)
         {
             Date = date;
+            dayBlockHasDate = date != null;
 
-            if (date != null && events != null)
+            InitializeDayBlock(events);
+        }
+
+        private void InitializeDayBlock(List<Event> events)
+        {
+            if (dayBlockHasDate && events != null)
             {
                 SetDayEventsCount(events);
             }
@@ -130,20 +137,23 @@ namespace SVCalendar.WPF.View
         public string EventsCountDisplay { get; set; }
 
         public DateTime? Date { get; set; }
+
         public int DayNumber => Date?.Day ?? -1;
+
         public string DayNumberText => DayNumber > 0 ? DayNumber.ToString() : "";
 
-        public SolidColorBrush Color => Date?.DayOfWeek switch
-        {
-            DayOfWeek.Saturday => Brushes.LightCoral,
-            DayOfWeek.Sunday => Brushes.LightCoral,
-            _ => Brushes.LightBlue
-        };
+        public SolidColorBrush Color =>
+            Date?.DayOfWeek switch
+                {
+                    DayOfWeek.Saturday => Brushes.LightCoral,
+                    DayOfWeek.Sunday => Brushes.LightCoral,
+                    _ => Brushes.LightBlue
+                };
 
         private void SetDayEventsCount(List<Event> events)
         {
             int numberEvents =
-                events.Count(anEvent => Date != null && EventHappensInCurrentDay(anEvent, (DateTime) Date));
+                events.Count(anEvent => dayBlockHasDate && EventHappensInCurrentDay(anEvent, (DateTime)Date));
             EventsCountDisplay = numberEvents > 0 ? new string('•', numberEvents) : "";
         }
 

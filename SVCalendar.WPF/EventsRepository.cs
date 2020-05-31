@@ -4,24 +4,24 @@ using SVCalendar.Model;
 
 namespace SVCalendar.WPF
 {
-    class EventsRepository : IEventsRepository
+    internal class EventsRepository : IEventsRepository
     {
-        private readonly CalendarDbContext _db;
+        private readonly CalendarDbContext db;
 
         public EventsRepository()
         {
-            _db = new CalendarDbContext();
+            db = new CalendarDbContext();
         }
 
         public List<Event> GetEvents()
         {
-            return _db.Events.ToList();
+            return db.Events.ToList();
         }
 
         public void AddEvent(Event eventToAdd)
         {
-            _db.Add(eventToAdd);
-            _db.SaveChanges();
+            db.Add(eventToAdd);
+            db.SaveChanges();
         }
     }
 }
