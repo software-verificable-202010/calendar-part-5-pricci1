@@ -18,10 +18,10 @@ namespace SVCalendar.WPF.View
 
         private List<WeekDay> weekDays;
 
-        public WeekGridViewModel(IEventsRepository eventsRepository)
+        public WeekGridViewModel(IEventsRepository eventsRepository, User currentUser)
         {
             CurrentDay = DateTime.Today;
-            Events = eventsRepository.GetEvents(); // TODO: do everything with SQL.
+            Events = eventsRepository.GetUserEvents(currentUser); // TODO: do everything with SQL.
 
             NextWeekCommand = new RelayCommand(OnNextWeekSelected);
             PreviousWeekCommand = new RelayCommand(OnPreviousWeekSelected);
@@ -35,7 +35,10 @@ namespace SVCalendar.WPF.View
             set => SetProperty(ref monthYearText, value);
         }
 
-        public IEnumerable<Event> Events { get; set; }
+        public IEnumerable<Event> Events
+        {
+            get; set;
+        }
 
         public DateTime CurrentDay
         {
@@ -47,9 +50,15 @@ namespace SVCalendar.WPF.View
             }
         }
 
-        public RelayCommand PreviousWeekCommand { get; set; }
+        public RelayCommand PreviousWeekCommand
+        {
+            get; set;
+        }
 
-        public RelayCommand NextWeekCommand { get; set; }
+        public RelayCommand NextWeekCommand
+        {
+            get; set;
+        }
 
         public List<WeekDay> WeekDays
         {
@@ -103,15 +112,30 @@ namespace SVCalendar.WPF.View
             InitializeHalfHours();
         }
 
-        public DateTime CurrentDay { get; set; }
+        public DateTime CurrentDay
+        {
+            get; set;
+        }
 
-        public string DayName { get; set; }
+        public string DayName
+        {
+            get; set;
+        }
 
-        public string DayNumber { get; set; }
+        public string DayNumber
+        {
+            get; set;
+        }
 
-        public List<HalfHour> HalfHours { get; set; }
+        public List<HalfHour> HalfHours
+        {
+            get; set;
+        }
 
-        public IEnumerable<Event> DayEvents { get; set; }
+        public IEnumerable<Event> DayEvents
+        {
+            get; set;
+        }
 
         private void SetCurrentDayEvents(IEnumerable<Event> events)
         {
@@ -151,11 +175,14 @@ namespace SVCalendar.WPF.View
             SetCorrespondingEvents();
         }
 
-        private DateTime CorrespondingHalfHour { get; }
-
         public string TimeText { get; set; }
 
         public List<Event> Events { get; set; }
+
+        public DateTime CorrespondingHalfHour
+        {
+            get;
+        }
 
         private void SetFormattedTimeText()
         {

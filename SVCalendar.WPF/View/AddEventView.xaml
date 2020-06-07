@@ -4,8 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:SVCalendar.WPF.View" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:model="clr-namespace:SVCalendar.Model;assembly=SVCalendar.Model"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
+  <UserControl.Resources>
+    <DataTemplate DataType="{x:Type model:User}">
+      <ListBoxItem Content="{Binding Name}" />
+    </DataTemplate>
+  </UserControl.Resources>
   <StackPanel>
     <Grid>
       <Grid.RowDefinitions>
@@ -27,6 +33,13 @@
       <Label Content="End date" Grid.Column="0" Grid.Row="3" />
       <xctk:DateTimePicker Grid.Row="3" Grid.Column="1" Value="{Binding EventEndDate}" />
     </Grid>
+    <ComboBox Height="20" ItemsSource="{Binding InvitableUsers}" SelectedItem="{Binding SelectedUser, Mode=TwoWay}"/>
+    <StackPanel Orientation="Horizontal">
+      <Button Content="Invite User" Command="{Binding InviteUserCommand}" />
+      <Button Content="Refresh Invitable Users" Command="{Binding RefreshInvitesCommand}" />
+      <Label Content="If invite User or Save event cant be clicked, maybe a Refresh is needed. Also, you can't Invite yourself"></Label>
+    </StackPanel>
+    <ListView Height="100" ItemsSource="{Binding InvitedUsers}" />
     <StackPanel Orientation="Horizontal">
       <Button Content="Save Event" Command="{Binding SaveEventCommand}" />
       <Button Content="Reset" Command="{Binding ResetEventCommand}" />

@@ -8,6 +8,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200506072213_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200506072213_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200601220824_init.cs" />
+    <Compile Remove="Migrations\20200601220824_init.Designer.cs" />
+    <Compile Remove="Migrations\20200601230810_init.cs" />
+    <Compile Remove="Migrations\20200601230810_init.Designer.cs" />
+    <Compile Remove="Migrations\20200602014018_init.cs" />
+    <Compile Remove="Migrations\20200602014018_init.Designer.cs" />
+    <Compile Remove="Migrations\20200603223647_addUser.cs" />
+    <Compile Remove="Migrations\20200603223647_addUser.Designer.cs" />
+    <Compile Remove="Migrations\20200605214755_Index_UserEvent.cs" />
+    <Compile Remove="Migrations\20200605214755_Index_UserEvent.Designer.cs" />
+    <Compile Remove="Migrations\20200606130251_UserEventDbSet.cs" />
+    <Compile Remove="Migrations\20200606130251_UserEventDbSet.Designer.cs" />
+    <Compile Remove="Migrations\20200606130622_UserEventDbSet.cs" />
+    <Compile Remove="Migrations\20200606130622_UserEventDbSet.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Extended.Wpf.Toolkit" Version="3.8.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>

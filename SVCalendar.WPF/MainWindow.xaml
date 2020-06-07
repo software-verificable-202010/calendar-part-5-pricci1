@@ -11,6 +11,9 @@
     <local:MainWindowViewModel />
   </Window.DataContext>
   <Window.Resources>
+    <DataTemplate DataType="{x:Type view:SignInViewModel}">
+      <view:SignInView />
+    </DataTemplate>
     <DataTemplate DataType="{x:Type view:MonthGridViewModel}">
       <view:MonthGrid />
     </DataTemplate>
@@ -19,6 +22,9 @@
     </DataTemplate>
     <DataTemplate DataType="{x:Type view:AddEventViewModel}">
       <view:AddEventView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type view:EditEventsViewModel}">
+      <view:EditEventsView />
     </DataTemplate>
   </Window.Resources>
   <StackPanel Orientation="Vertical">
@@ -38,6 +44,9 @@
       <Separator Visibility="Hidden" Width="10" />
       <Button Content="Refresh"
               Command="{Binding RefreshCommand}" />
+      <Separator Visibility="Hidden" Width="10" />
+      <Button Content="View/Edit Events"
+              Command="{Binding EditEventsCommand}" />
     </StackPanel>
     <ScrollViewer Height="380">
       <ContentControl Content="{Binding CurrentViewModel}" />

@@ -1,19 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Media;
-using SVCalendar.Model;
-using SVCalendar.WPF.Annotations;
-
-namespace SVCalendar.WPF.View
+﻿namespace SVCalendar.WPF.View
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Windows.Media;
+
+    using SVCalendar.Model;
+    using SVCalendar.WPF.Annotations;
+
     class MonthGridViewModel : BindableBase
     {
         private readonly string[] monthNames =
-        {
-            "January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
-            "November", "December"
-        };
+            {
+                "January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
+                "November", "December"
+            };
 
         private DateTime currentDate;
 
@@ -21,16 +22,19 @@ namespace SVCalendar.WPF.View
 
         private string monthYearText;
 
-        public MonthGridViewModel(IEventsRepository eventsRepository)
+        public MonthGridViewModel(IEventsRepository eventsRepository, User currentUser)
         {
-            Events = eventsRepository.GetEvents();
+            Events = eventsRepository.GetUserEvents(currentUser);
             CurrentDate = DateTime.Today;
             MonthDays = InitializeDays();
             NextMonthCommand = new RelayCommand(OnNextMonthSelected);
             PreviousMonthCommand = new RelayCommand(OnPreviousMonthSelected);
         }
 
-        public List<Event> Events { get; set; }
+        public List<Event> Events
+        {
+            get; set;
+        }
 
         public List<DayBlock> MonthDays
         {
@@ -63,9 +67,15 @@ namespace SVCalendar.WPF.View
             }
         }
 
-        public RelayCommand NextMonthCommand { get; }
+        public RelayCommand NextMonthCommand
+        {
+            get;
+        }
 
-        public RelayCommand PreviousMonthCommand { get; }
+        public RelayCommand PreviousMonthCommand
+        {
+            get;
+        }
 
         private void OnPreviousMonthSelected()
         {
@@ -84,10 +94,9 @@ namespace SVCalendar.WPF.View
             var monthDays = new List<DayBlock>();
             int daysInCurrentMonth = DateTime.DaysInMonth(CurrentDate.Year, CurrentDate.Month);
             DateTime firstDayOfCurrentMonth = CurrentDate.AddDays(-1 * CurrentDate.Day + 1);
-            var firstWeekDayOfCurrentMonth = (int) CurrentDate.AddDays(-1 * CurrentDate.Day + 1).DayOfWeek;
+            var firstWeekDayOfCurrentMonth = (int)CurrentDate.AddDays(-1 * CurrentDate.Day + 1).DayOfWeek;
 
-            int adjustedFirstWeekDayOfCurrentMonth =
-                AdjustFirstWeekDayOfCurrentMonth(firstWeekDayOfCurrentMonth);
+            int adjustedFirstWeekDayOfCurrentMonth = AdjustFirstWeekDayOfCurrentMonth(firstWeekDayOfCurrentMonth);
 
             for (var i = 1; i < adjustedFirstWeekDayOfCurrentMonth + 1; i++)
             {
@@ -134,9 +143,15 @@ namespace SVCalendar.WPF.View
             }
         }
 
-        public string EventsCountDisplay { get; set; }
+        public string EventsCountDisplay
+        {
+            get; set;
+        }
 
-        public DateTime? Date { get; set; }
+        public DateTime? Date
+        {
+            get; set;
+        }
 
         public int DayNumber => Date?.Day ?? -1;
 
@@ -152,8 +167,8 @@ namespace SVCalendar.WPF.View
 
         private void SetDayEventsCount(List<Event> events)
         {
-            int numberEvents =
-                events.Count(anEvent => dayBlockHasDate && EventHappensInCurrentDay(anEvent, (DateTime)Date));
+            int numberEvents = events.Count(
+                anEvent => dayBlockHasDate && EventHappensInCurrentDay(anEvent, (DateTime)Date));
             EventsCountDisplay = numberEvents > 0 ? new string('•', numberEvents) : "";
         }
 
