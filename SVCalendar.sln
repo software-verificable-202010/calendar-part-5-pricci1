@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SVCalendar.WPF", "SVCalenda
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SVCalendar.Model", "SVCalendar.Model\SVCalendar.Model.csproj", "{7C2B09FD-D0AE-4794-A547-45370B9E440D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XUnitTestProject", "XUnitTestProject\XUnitTestProject.csproj", "{845DA5EF-3DEE-4B4C-9F72-53D46729CFEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SVCalendar.Tests", "XUnitTestProject\SVCalendar.Tests.csproj", "{845DA5EF-3DEE-4B4C-9F72-53D46729CFEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -14,5 +14,16 @@ namespace SVCalendar.Tests
 
             Assert.False(sot);
         }
+
+        [Fact]
+        public void ReturnFalseIfEventDoesNotIntersectDateRange()
+        {
+            DateTime now = DateTime.Now;
+            Event anEvent = new Event { StartDate = now, EndDate = now.AddMinutes(30) };
+
+            bool sot = anEvent.EventDoesNotIntersectDatesRange(now.AddMinutes(-30), now.AddMinutes(-20));
+
+            Assert.False(sot);
+        }
     }
 }
