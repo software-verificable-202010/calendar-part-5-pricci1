@@ -10,7 +10,7 @@ namespace SVCalendar.WPF
 
     using SVCalendar.WPF.Annotations;
 
-    internal class EventsRepository : IEventsRepository
+    internal class EventsRepository : IEventsRepository, IDisposable
     {
         private readonly CalendarDbContext db;
 
@@ -62,6 +62,7 @@ namespace SVCalendar.WPF
         public void AddUser(User user)
         {
             db.Add(user);
+            db.SaveChanges();
         }
 
         public List<Event> GetUserOwnedEvents(User user)
@@ -79,6 +80,11 @@ namespace SVCalendar.WPF
         {
             db.Update(anEvent);
             db.SaveChanges();
+        }
+
+        public void Dispose()
+        {
+            db?.Dispose();
         }
     }
 }

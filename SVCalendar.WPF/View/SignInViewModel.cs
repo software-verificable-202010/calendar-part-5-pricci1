@@ -51,6 +51,7 @@
                                Name = UsernameText
                            };
                 eventsRepository.AddUser(user);
+                user = eventsRepository.GetUserByName(UsernameText);
             }
 
             changeUserCallback(user);
