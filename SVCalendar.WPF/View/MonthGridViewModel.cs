@@ -119,7 +119,7 @@
         }
     }
 
-    internal class DayBlock
+    public class DayBlock
     {
         private readonly bool dayBlockHasDate;
 

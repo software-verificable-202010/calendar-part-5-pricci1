@@ -7,7 +7,7 @@
     using SVCalendar.Model;
     using SVCalendar.WPF.Annotations;
 
-    internal class AddEventViewModel : BindableBase
+    public class AddEventViewModel : BindableBase
     {
         private readonly IEventsRepository eventsRepository;
 

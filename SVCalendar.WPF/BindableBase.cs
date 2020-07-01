@@ -4,7 +4,7 @@ using SVCalendar.WPF.Annotations;
 
 namespace SVCalendar.WPF
 {
-    class BindableBase : INotifyPropertyChanged
+    public class BindableBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

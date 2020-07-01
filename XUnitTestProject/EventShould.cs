@@ -15,15 +15,22 @@ namespace SVCalendar.Tests
             Assert.False(sot);
         }
 
-        [Fact]
-        public void ReturnFalseIfEventDoesNotIntersectDateRange()
+        [Theory]
+        [InlineData(-30, -20, true)]
+        [InlineData(31, 40, true)]
+        [InlineData(-30, 20, false)]
+        [InlineData(10, 12, false)]
+        public void EventDoesNotIntersectDateRange(int startOffset, int endOffset, bool expected)
         {
             DateTime now = DateTime.Now;
-            Event anEvent = new Event { StartDate = now, EndDate = now.AddMinutes(30) };
+            var anEvent = new Event { StartDate = now, EndDate = now.AddMinutes(30) };
 
-            bool sot = anEvent.EventDoesNotIntersectDatesRange(now.AddMinutes(-30), now.AddMinutes(-20));
+            DateTime start = now.AddMinutes(startOffset);
+            DateTime end = now.AddMinutes(endOffset);
 
-            Assert.False(sot);
+            bool sot = anEvent.EventDoesNotIntersectDatesRange(start, end);
+
+            Assert.Equal(expected, sot);
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     using SVCalendar.Model;
 
-    internal class SignInViewModel : BindableBase
+    public class SignInViewModel : BindableBase
     {
         private readonly IEventsRepository eventsRepository;
 

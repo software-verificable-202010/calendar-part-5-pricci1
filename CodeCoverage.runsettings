@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <!-- Configurations for data collectors -->
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="Code Coverage" uri="datacollector://Microsoft/CodeCoverage/2.0" assemblyQualifiedName="Microsoft.VisualStudio.Coverage.DynamicCoverageDataCollector, Microsoft.VisualStudio.TraceCollector, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+        <Configuration>
+          <CodeCoverage>
+            <ModulePaths>
+              <Include>
+                <ModulePath>.*WPF\.dll$</ModulePath>
+                <ModulePath>.*Model\.dll$</ModulePath>
+              </Include>
+              <Exclude>
+                <ModulePath>.*CPPUnitTestFramework.*</ModulePath>
+                <ModulePath>.*Tests\.dll$</ModulePath>
+              </Exclude>
+            </ModulePaths>
+            <Sources>
+              <Exclude>
+                <Source>.*\\Annotations\.cs</Source>
+                <Source>.*\\RelayCommand\.cs</Source>
+              </Exclude>
+            </Sources>
+
+            <Functions>
+              <Exclude>
+                <Function>^SVCalendar.WPF.Annotations\..*	</Function>
+                <Function>^SVCalendar.WPF.Migrations\..*	</Function>
+                <Function>^XamlGeneratedNamespace\..*	</Function>
+              </Exclude>
+            </Functions>
+
+            <!-- We recommend you do not change the following values: -->
+            <UseVerifiableInstrumentation>True</UseVerifiableInstrumentation>
+            <AllowLowIntegrityProcesses>True</AllowLowIntegrityProcesses>
+            <CollectFromChildProcesses>True</CollectFromChildProcesses>
+            <CollectAspDotNet>False</CollectAspDotNet>
+
+          </CodeCoverage>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+
+
+</RunSettings>

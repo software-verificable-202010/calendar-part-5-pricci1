@@ -5,7 +5,7 @@
 
     using SVCalendar.Model;
 
-    internal class EditEventsViewModel : BindableBase
+    public class EditEventsViewModel : BindableBase
     {
         private readonly IEventsRepository eventsRepository;
 
