@@ -13,9 +13,9 @@ namespace SVCalendar.Tests.View
 {
     public class EditEventsViewModelTests
     {
-        private User currentUser;
+        private readonly User currentUser;
 
-        private Mock<IEventsRepository> eventsRepositoryMock;
+        private readonly Mock<IEventsRepository> eventsRepositoryMock;
 
         public EditEventsViewModelTests()
         {

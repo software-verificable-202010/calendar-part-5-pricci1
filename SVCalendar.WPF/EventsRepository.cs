@@ -33,7 +33,7 @@ namespace SVCalendar.WPF
 
         public User GetUserByName(string userName)
         {
-            return db.Users.FirstOrDefault(user => user.Name.Equals(userName));
+            return db.Users.FirstOrDefault(user => string.Equals(user.Name, userName));
         }
 
         public List<User> GetAllUsers()

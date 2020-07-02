@@ -12,11 +12,11 @@ namespace SVCalendar.View.Tests
 {
     public class AddEventViewModelTests
     {
-        private AddEventViewModel addEventViewModel;
+        private readonly AddEventViewModel addEventViewModel;
 
-        private User currentUser;
+        private readonly User currentUser;
 
-        private Mock<IEventsRepository> eventsRepositoryMock;
+        private readonly Mock<IEventsRepository> eventsRepositoryMock;
 
         public AddEventViewModelTests()
         {

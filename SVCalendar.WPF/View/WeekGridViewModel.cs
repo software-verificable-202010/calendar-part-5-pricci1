@@ -66,6 +66,12 @@ namespace SVCalendar.WPF.View
             set => SetProperty(ref weekDays, value);
         }
 
+        private static DateTime GetMondayOfCurrentWeek(DateTime currentDay)
+        {
+            DayOfWeek currentDayOfWeek = currentDay.DayOfWeek;
+            return currentDay.AddDays(-1 * (int) currentDayOfWeek + 1);
+        }
+
         private void InitializeWeekDays()
         {
             var tempWeekDays = new List<WeekDay>();
@@ -78,12 +84,6 @@ namespace SVCalendar.WPF.View
             }
 
             WeekDays = tempWeekDays;
-        }
-
-        private DateTime GetMondayOfCurrentWeek(DateTime currentDay)
-        {
-            DayOfWeek currentDayOfWeek = currentDay.DayOfWeek;
-            return currentDay.AddDays(-1 * (int) currentDayOfWeek + 1);
         }
 
         private void OnPreviousWeekSelected()

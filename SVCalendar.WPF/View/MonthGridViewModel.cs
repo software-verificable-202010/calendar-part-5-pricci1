@@ -111,7 +111,7 @@
             return monthDays;
         }
 
-        private int AdjustFirstWeekDayOfCurrentMonth(int firstWeekDayOfCurrentMonth)
+        private static int AdjustFirstWeekDayOfCurrentMonth(int firstWeekDayOfCurrentMonth)
         {
             const int SundayOldValue = 0;
             const int SundayNewValue = 6;

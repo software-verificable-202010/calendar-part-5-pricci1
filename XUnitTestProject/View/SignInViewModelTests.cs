@@ -16,7 +16,7 @@ namespace SVCalendar.Tests.View
 
     public class SignInViewModelTests
     {
-        private Mock<IEventsRepository> eventsRepositoryMock;
+        private readonly Mock<IEventsRepository> eventsRepositoryMock;
 
         public SignInViewModelTests()
         {

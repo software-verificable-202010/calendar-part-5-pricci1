@@ -4,8 +4,10 @@ namespace SVCalendar.WPF
 {
     using SVCalendar.Model;
 
-    class MainWindowViewModel : BindableBase
+    internal class MainWindowViewModel : BindableBase
     {
+        #region 
+
         private AddEventViewModel addEventViewModel;
 
         private BindableBase currentViewModel;
@@ -15,6 +17,8 @@ namespace SVCalendar.WPF
         private WeekGridViewModel weekGridViewModel;
 
         private User currentUser;
+
+        #endregion
 
         public MainWindowViewModel()
         {
@@ -32,6 +36,8 @@ namespace SVCalendar.WPF
             RefreshCommand = new RelayCommand(OnRefreshSelected);
             EditEventsCommand = new RelayCommand(OnEditEventsSelected);
         }
+
+        #region 
 
         private void OnEditEventsSelected()
         {
@@ -76,6 +82,10 @@ namespace SVCalendar.WPF
             get;
         }
 
+        #endregion
+
+        #region 
+
         private void SwitchCurrentUser(User newSignedIn)
         {
             currentUser = newSignedIn;
@@ -98,15 +108,17 @@ namespace SVCalendar.WPF
         private void OnChangeCalendarModeSelected(CalendarMode mode)
         {
             CurrentViewModel = mode switch
-            {
-                CalendarMode.Monthly => MonthGridViewModel,
-                CalendarMode.Weekly => WeekGridViewModel,
-                _ => CurrentViewModel
-            };
+                {
+                    CalendarMode.Monthly => MonthGridViewModel,
+                    CalendarMode.Weekly => WeekGridViewModel,
+                    _ => CurrentViewModel
+                };
         }
+
+        #endregion
     }
 
-    enum CalendarMode
+    internal enum CalendarMode
     {
         Monthly,
         Weekly
