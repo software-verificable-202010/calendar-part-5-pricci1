@@ -1,14 +1,26 @@
 # UGLY CALENDAR
 > MVVM WPF .NET Core Desktop application
+
+
+## Tests
 > Tests with xUnit and Moq
 
-## Test coverage
+![Tests](./Tests.png)
+
+### Coverage
 > Calculated by Visual Studio 2019 Enterprise 
+
 ![Coverage by VS 2019 Enterprise](./TestsCoverage.png)
+
+
 
 ## Static Analysis
 > Reason of why this warnings where ignored in the last column
-> Rules applied are in the ´.editorconfig´ file. [Link](./.editorconfig)
+
+> Rules applied are in the `.editorconfig` file. [Link](./.editorconfig)
+
+> They are in that file because thats how it's done in .NET Core
+
 
 | Severity | Code    | Description                                                                                                                                                                                                                                                                                                                                                              | Project          | File                                              | Line | Why ignored                                                                                                  |
 |----------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------|---------------------------------------------------|------|--------------------------------------------------------------------------------------------------------------|
