@@ -12,17 +12,18 @@ namespace SVCalendar.WPF
 
     internal class EventsRepository : IEventsRepository, IDisposable
     {
+        #region Constants, Fields
+
         private readonly CalendarDbContext db;
+
+        #endregion
 
         public EventsRepository()
         {
             db = new CalendarDbContext();
         }
 
-        public List<Event> GetEvents()
-        {
-            return db.Events.ToList();
-        }
+        #region Methods
 
         public void AddEvent(Event eventToAdd)
         {
@@ -30,15 +31,21 @@ namespace SVCalendar.WPF
             db.SaveChanges();
         }
 
-
-        public User GetUserByName(string userName)
+        public void AddUser(User user)
         {
-            return db.Users.FirstOrDefault(user => string.Equals(user.Name, userName));
+            db.Add(user);
+            db.SaveChanges();
         }
 
-        public List<User> GetAllUsers()
+        public void DeleteEvent(Event anEvent)
         {
-            return db.Users.ToList();
+            db.Remove(anEvent);
+            db.SaveChanges();
+        }
+
+        public void Dispose()
+        {
+            db?.Dispose();
         }
 
         public List<User> GetAllUsersAvailableBetweenDates(DateTime startDate, DateTime endDate)
@@ -53,27 +60,30 @@ namespace SVCalendar.WPF
             return availableUsers;
         }
 
+        public List<User> GetAllUsers()
+        {
+            return db.Users.ToList();
+        }
+
+        public List<Event> GetEvents()
+        {
+            return db.Events.ToList();
+        }
+
+        public User GetUserByName(string userName)
+        {
+            return db.Users.FirstOrDefault(user => string.Equals(user.Name, userName));
+        }
+
         public List<Event> GetUserEvents(User user)
         {
             User retrivedUser = db.Users.Include(u => u.UserEvents).ThenInclude(ue => ue.Event).First(u => u.UserId == user.UserId);
             return retrivedUser.UserEvents.Select(ue => ue.Event).ToList();
         }
 
-        public void AddUser(User user)
-        {
-            db.Add(user);
-            db.SaveChanges();
-        }
-
         public List<Event> GetUserOwnedEvents(User user)
         {
             return db.Events.Where(e => e.Owner == user).ToList();
-        }
-
-        public void DeleteEvent(Event anEvent)
-        {
-            db.Remove(anEvent);
-            db.SaveChanges();
         }
 
         public void UpdateEvent(Event anEvent)
@@ -82,9 +92,6 @@ namespace SVCalendar.WPF
             db.SaveChanges();
         }
 
-        public void Dispose()
-        {
-            db?.Dispose();
-        }
+        #endregion
     }
 }

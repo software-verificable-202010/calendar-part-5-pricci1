@@ -7,11 +7,15 @@
 
     public class EditEventsViewModel : BindableBase
     {
-        private readonly IEventsRepository eventsRepository;
+        #region Constants, Fields
 
         private readonly User currentUser;
 
+        private readonly IEventsRepository eventsRepository;
+
         private Event selectedEvent;
+
+        #endregion
 
         public EditEventsViewModel(IEventsRepository eventsRepository, User currentUser)
         {
@@ -26,14 +30,31 @@
             SelectedEvent = null;
         }
 
-        public string SelectedEventTitle
+        #region Events, Interfaces, Properties
+
+        public RelayCommand DeleteEventCommand
         {
-            get => SelectedEvent?.Title ?? string.Empty;
+            get; set;
+        }
+
+        public ObservableCollection<Event> Events
+        {
+            get; set;
+        }
+
+        public RelayCommand SaveEventCommand
+        {
+            get; set;
+        }
+
+        public Event SelectedEvent
+        {
+            get => selectedEvent;
             set
             {
-                SelectedEvent.Title = value;
-                OnPropertyChanged();
-                SaveEventCommand.RaiseCanExecuteChanged();
+                SetProperty(ref selectedEvent, value);
+                RefreshEditEventFields();
+                DeleteEventCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -43,17 +64,6 @@
             set
             {
                 SelectedEvent.Description = value;
-                OnPropertyChanged();
-                SaveEventCommand.RaiseCanExecuteChanged();
-            }
-        }
-
-        public DateTime SelectedEventStartDate
-        {
-            get => SelectedEvent?.StartDate ?? DateTime.Now;
-            set
-            {
-                SelectedEvent.StartDate = value;
                 OnPropertyChanged();
                 SaveEventCommand.RaiseCanExecuteChanged();
             }
@@ -70,30 +80,40 @@
             }
         }
 
-        public ObservableCollection<Event> Events
+        public DateTime SelectedEventStartDate
         {
-            get; set;
-        }
-
-        public Event SelectedEvent
-        {
-            get => selectedEvent;
+            get => SelectedEvent?.StartDate ?? DateTime.Now;
             set
             {
-                SetProperty(ref selectedEvent, value);
-                RefreshEditEventFields();
-                DeleteEventCommand.RaiseCanExecuteChanged();
+                SelectedEvent.StartDate = value;
+                OnPropertyChanged();
+                SaveEventCommand.RaiseCanExecuteChanged();
             }
         }
 
-        public RelayCommand DeleteEventCommand
+        public string SelectedEventTitle
         {
-            get; set;
+            get => SelectedEvent?.Title ?? string.Empty;
+            set
+            {
+                SelectedEvent.Title = value;
+                OnPropertyChanged();
+                SaveEventCommand.RaiseCanExecuteChanged();
+            }
         }
 
-        public RelayCommand SaveEventCommand
+        #endregion
+
+        #region Methods
+
+        private bool CanDeleteEvent()
         {
-            get; set;
+            return SelectedEvent != null;
+        }
+
+        private bool CanSaveEvent()
+        {
+            return true;
         }
 
         private void InitializeEvents()
@@ -102,21 +122,11 @@
             Events = new ObservableCollection<Event>(events);
         }
 
-        private bool CanDeleteEvent()
-        {
-            return SelectedEvent != null;
-        }
-
         private void OnDeleteEventSelected()
         {
             eventsRepository.DeleteEvent(SelectedEvent);
             Events.Remove(SelectedEvent);
             SelectedEvent = null;
-        }
-
-        private bool CanSaveEvent()
-        {
-            return true;
         }
 
         private void OnSaveEventSelected()
@@ -134,5 +144,7 @@
                 SelectedEventEndDate = SelectedEvent.EndDate;
             }
         }
+
+        #endregion
     }
 }

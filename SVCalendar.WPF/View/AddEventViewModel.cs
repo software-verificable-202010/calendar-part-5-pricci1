@@ -9,20 +9,24 @@
 
     public class AddEventViewModel : BindableBase
     {
-        private readonly IEventsRepository eventsRepository;
+        #region Constants, Fields
 
         private readonly User currentUser;
 
-        private Event newEvent;
+        private readonly IEventsRepository eventsRepository;
 
         private ObservableCollection<User> invitableUsers;
 
         private ObservableCollection<User> invitedUsers;
 
+        private bool invitesNeedRefresh;
+
+        private Event newEvent;
+
         [CanBeNull]
         private User selectedUser;
 
-        private bool invitesNeedRefresh;
+        #endregion
 
         public AddEventViewModel(IEventsRepository eventsRepository, User currentUser)
         {
@@ -36,15 +40,99 @@
             InitializeInvites();
         }
 
+        #region Events, Interfaces, Properties
+
+        public string EventDescription
+        {
+            get => NewEvent.Description;
+            set
+            {
+                NewEvent.Description = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public DateTime EventEndDate
+        {
+            get => NewEvent.EndDate;
+            set
+            {
+                NewEvent.EndDate = value;
+                InvitesNeedRefresh = true;
+                OnPropertyChanged();
+                SaveEventCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        public DateTime EventStartDate
+        {
+            get => NewEvent.StartDate;
+            set
+            {
+                NewEvent.StartDate = value;
+                InvitesNeedRefresh = true;
+                OnPropertyChanged();
+                SaveEventCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        public string EventTitle
+        {
+            get => NewEvent.Title;
+            set
+            {
+                NewEvent.Title = value;
+                OnPropertyChanged();
+                SaveEventCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        public ObservableCollection<User> InvitableUsers
+        {
+            get => invitableUsers;
+            set
+            {
+                invitableUsers?.Remove(currentUser);
+                SetProperty(ref invitableUsers, value);
+            }
+        }
+
+        public ObservableCollection<User> InvitedUsers
+        {
+            get => invitedUsers;
+            set => SetProperty(ref invitedUsers, value);
+        }
+
         public bool InvitesNeedRefresh
         {
             get => invitesNeedRefresh;
             set => SetProperty(ref invitesNeedRefresh, value);
         }
 
+        public RelayCommand InviteUserCommand
+        {
+            get;
+        }
+
+        public Event NewEvent
+        {
+            get => newEvent;
+            set => SetProperty(ref newEvent, value);
+        }
+
         public RelayCommand RefreshInvitesCommand
         {
             get; set;
+        }
+
+        public RelayCommand ResetEventCommand
+        {
+            get;
+        }
+
+        public RelayCommand SaveEventCommand
+        {
+            get;
         }
 
         [CanBeNull]
@@ -64,91 +152,52 @@
             }
         }
 
-        public RelayCommand InviteUserCommand
-        {
-            get;
-        }
+        #endregion
 
-        public ObservableCollection<User> InvitedUsers
-        {
-            get => invitedUsers;
-            set => SetProperty(ref invitedUsers, value);
-        }
+        #region Methods
 
-        public ObservableCollection<User> InvitableUsers
+        private void AddInvitedUsersToEvent()
         {
-            get => invitableUsers;
-            set
+            foreach (User invited in InvitedUsers)
             {
-                invitableUsers?.Remove(currentUser);
-                SetProperty(ref invitableUsers, value);
-            }
-        }
-
-        public RelayCommand SaveEventCommand
-        {
-            get;
-        }
-
-        public RelayCommand ResetEventCommand
-        {
-            get;
-        }
-
-        public Event NewEvent
-        {
-            get => newEvent;
-            set => SetProperty(ref newEvent, value);
-        }
-
-        public string EventTitle
-        {
-            get => NewEvent.Title;
-            set
-            {
-                NewEvent.Title = value;
-                OnPropertyChanged();
-                SaveEventCommand.RaiseCanExecuteChanged();
-            }
-        }
-
-        public string EventDescription
-        {
-            get => NewEvent.Description;
-            set
-            {
-                NewEvent.Description = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public DateTime EventStartDate
-        {
-            get => NewEvent.StartDate;
-            set
-            {
-                NewEvent.StartDate = value;
-                InvitesNeedRefresh = true;
-                OnPropertyChanged();
-                SaveEventCommand.RaiseCanExecuteChanged();
-            }
-        }
-
-        public DateTime EventEndDate
-        {
-            get => NewEvent.EndDate;
-            set
-            {
-                NewEvent.EndDate = value;
-                InvitesNeedRefresh = true;
-                OnPropertyChanged();
-                SaveEventCommand.RaiseCanExecuteChanged();
+                var userEvent = new UserEvent
+                                    {
+                                        Event = NewEvent, User = invited
+                                    };
+                NewEvent.UserEvents.Add(userEvent);
             }
         }
 
         private bool CanInviteUser()
         {
             return SelectedUser != null && !InvitesNeedRefresh;
+        }
+
+        private bool CanSaveEvent()
+        {
+            if (string.IsNullOrWhiteSpace(NewEvent.Title))
+            {
+                return false;
+            }
+
+            if (!NewEvent.StartDateIsEarlierThanEndDate())
+            {
+                return false;
+            }
+
+            if (InvitesNeedRefresh)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private void OnInviteUserSelected()
+        {
+            InvitedUsers.Add(SelectedUser);
+            InvitableUsers.Remove(SelectedUser);
+            SelectedUser = null;
         }
 
         private void OnRefreshInvitesSelected()
@@ -158,11 +207,21 @@
             SaveEventCommand.RaiseCanExecuteChanged();
         }
 
-        private void OnInviteUserSelected()
+        private void OnResetEventSelected()
         {
-            InvitedUsers.Add(SelectedUser);
-            InvitableUsers.Remove(SelectedUser);
-            SelectedUser = null;
+            InitializeInvites();
+            InitializeNewEvent();
+            SaveEventCommand.RaiseCanExecuteChanged();
+        }
+
+        private void OnSaveEventSelected()
+        {
+            AddInvitedUsersToEvent();
+
+            eventsRepository.AddEvent(NewEvent);
+            InitializeInvites();
+            InitializeNewEvent();
+            SaveEventCommand.RaiseCanExecuteChanged();
         }
 
         private void InitializeInvites()
@@ -191,53 +250,6 @@
             EventEndDate = DateTime.Now.AddMinutes(31);
         }
 
-        private void OnResetEventSelected()
-        {
-            InitializeInvites();
-            InitializeNewEvent();
-            SaveEventCommand.RaiseCanExecuteChanged();
-        }
-
-        private bool CanSaveEvent()
-        {
-            if (string.IsNullOrWhiteSpace(NewEvent.Title))
-            {
-                return false;
-            }
-
-            if (!NewEvent.StartDateIsEarlierThanEndDate())
-            {
-                return false;
-            }
-
-            if (InvitesNeedRefresh)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private void OnSaveEventSelected()
-        {
-            AddInvitedUsersToEvent();
-
-            eventsRepository.AddEvent(NewEvent);
-            InitializeInvites();
-            InitializeNewEvent();
-            SaveEventCommand.RaiseCanExecuteChanged();
-        }
-
-        private void AddInvitedUsersToEvent()
-        {
-            foreach (User invited in InvitedUsers)
-            {
-                var userEvent = new UserEvent
-                                    {
-                                        Event = NewEvent, User = invited
-                                    };
-                NewEvent.UserEvents.Add(userEvent);
-            }
-        }
+        #endregion
     }
 }

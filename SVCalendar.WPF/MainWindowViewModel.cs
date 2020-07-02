@@ -6,14 +6,16 @@ namespace SVCalendar.WPF
 
     internal class MainWindowViewModel : BindableBase
     {
-        #region 
+        #region Fields
+
+        private readonly IEventsRepository eventsRepository;
 
         private AddEventViewModel addEventViewModel;
 
         private BindableBase currentViewModel;
 
-        private readonly IEventsRepository eventsRepository;
         private MonthGridViewModel monthGridViewModel;
+
         private WeekGridViewModel weekGridViewModel;
 
         private User currentUser;
@@ -37,7 +39,7 @@ namespace SVCalendar.WPF
             EditEventsCommand = new RelayCommand(OnEditEventsSelected);
         }
 
-        #region 
+        #region Properties
 
         private void OnEditEventsSelected()
         {
@@ -82,9 +84,9 @@ namespace SVCalendar.WPF
             get;
         }
 
-        #endregion
+        #endregion Properties
 
-        #region 
+        #region Methods
 
         private void SwitchCurrentUser(User newSignedIn)
         {

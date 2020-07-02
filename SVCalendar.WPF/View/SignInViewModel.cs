@@ -4,11 +4,15 @@
 
     public class SignInViewModel : BindableBase
     {
-        private readonly IEventsRepository eventsRepository;
+        #region Constants, Fields
 
         private readonly ChangeUserCallback changeUserCallback;
 
+        private readonly IEventsRepository eventsRepository;
+
         private string usernameText;
+
+        #endregion
 
         public SignInViewModel(IEventsRepository eventsRepository, ChangeUserCallback changeUser)
         {
@@ -20,6 +24,8 @@
         }
 
         public delegate void ChangeUserCallback(User user);
+
+        #region Events, Interfaces, Properties
 
         public RelayCommand SignInCommand
         {
@@ -35,6 +41,10 @@
                 SignInCommand.RaiseCanExecuteChanged();
             }
         }
+
+        #endregion
+
+        #region Methods
 
         private bool CanSignIn()
         {
@@ -56,5 +66,7 @@
 
             changeUserCallback(user);
         }
+
+        #endregion
     }
 }
