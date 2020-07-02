@@ -1,6 +1,7 @@
 # UGLY CALENDAR
 > MVVM WPF .NET Core Desktop application
 
+![Preview](./preview.png)
 
 ## Tests
 > Tests with xUnit and Moq
