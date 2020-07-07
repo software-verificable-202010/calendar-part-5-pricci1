@@ -175,15 +175,6 @@
 
         #region Methods
 
-        private bool EventHappensInCurrentDay(Event anEvent, DateTime date)
-        {
-            {
-                bool eventStartsBefore = DateTime.Compare(anEvent.StartDate.Date, date.Date) <= 0;
-                bool eventEndsAfter = DateTime.Compare(date.Date, anEvent.EndDate.Date) <= 0;
-                return eventStartsBefore && eventEndsAfter;
-            }
-        }
-
         private void InitializeDayBlock(List<Event> events)
         {
             if (dayBlockHasDate && events != null)
@@ -201,6 +192,15 @@
             int numberEvents = events.Count(
                 anEvent => dayBlockHasDate && EventHappensInCurrentDay(anEvent, (DateTime)Date));
             EventsCountDisplay = numberEvents > 0 ? new string('•', numberEvents) : "";
+        }
+
+        private bool EventHappensInCurrentDay(Event anEvent, DateTime date)
+        {
+            {
+                bool eventStartsBefore = DateTime.Compare(anEvent.StartDate.Date, date.Date) <= 0;
+                bool eventEndsAfter = DateTime.Compare(date.Date, anEvent.EndDate.Date) <= 0;
+                return eventStartsBefore && eventEndsAfter;
+            }
         }
 
         #endregion
