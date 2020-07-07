@@ -156,18 +156,6 @@
 
         #region Methods
 
-        private void AddInvitedUsersToEvent()
-        {
-            foreach (User invited in InvitedUsers)
-            {
-                var userEvent = new UserEvent
-                                    {
-                                        Event = NewEvent, User = invited
-                                    };
-                NewEvent.UserEvents.Add(userEvent);
-            }
-        }
-
         private bool CanInviteUser()
         {
             return SelectedUser != null && !InvitesNeedRefresh;
@@ -222,6 +210,18 @@
             InitializeInvites();
             InitializeNewEvent();
             SaveEventCommand.RaiseCanExecuteChanged();
+        }
+
+        private void AddInvitedUsersToEvent()
+        {
+            foreach (User invited in InvitedUsers)
+            {
+                var userEvent = new UserEvent
+                                    {
+                                        Event = NewEvent, User = invited
+                                    };
+                NewEvent.UserEvents.Add(userEvent);
+            }
         }
 
         private void InitializeInvites()
