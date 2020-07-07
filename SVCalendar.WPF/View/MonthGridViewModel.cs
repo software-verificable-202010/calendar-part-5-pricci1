@@ -87,7 +87,26 @@
 
         #region Methods
 
-        public List<DayBlock> InitializeDays()
+        private static int AdjustFirstWeekDayOfCurrentMonth(int firstWeekDayOfCurrentMonth)
+        {
+            const int SundayOldValue = 0;
+            const int SundayNewValue = 6;
+            return firstWeekDayOfCurrentMonth == SundayOldValue ? SundayNewValue : firstWeekDayOfCurrentMonth - 1;
+        }
+
+        private void OnNextMonthSelected()
+        {
+            CurrentDate = CurrentDate.AddMonths(1);
+            MonthDays = InitializeDays();
+        }
+
+        private void OnPreviousMonthSelected()
+        {
+            CurrentDate = CurrentDate.AddMonths(-1);
+            MonthDays = InitializeDays();
+        }
+
+        private List<DayBlock> InitializeDays()
         {
             var monthDays = new List<DayBlock>();
             int daysInCurrentMonth = DateTime.DaysInMonth(CurrentDate.Year, CurrentDate.Month);
@@ -107,25 +126,6 @@
             }
 
             return monthDays;
-        }
-
-        private static int AdjustFirstWeekDayOfCurrentMonth(int firstWeekDayOfCurrentMonth)
-        {
-            const int SundayOldValue = 0;
-            const int SundayNewValue = 6;
-            return firstWeekDayOfCurrentMonth == SundayOldValue ? SundayNewValue : firstWeekDayOfCurrentMonth - 1;
-        }
-
-        private void OnNextMonthSelected()
-        {
-            CurrentDate = CurrentDate.AddMonths(1);
-            MonthDays = InitializeDays();
-        }
-
-        private void OnPreviousMonthSelected()
-        {
-            CurrentDate = CurrentDate.AddMonths(-1);
-            MonthDays = InitializeDays();
         }
 
         #endregion
