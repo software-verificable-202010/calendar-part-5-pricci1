@@ -93,8 +93,8 @@ namespace SVCalendar.WPF.View
         {
             var tempWeekDays = new List<WeekDay>();
             DateTime monday = GetMondayOfCurrentWeek(CurrentDay);
-            const int DaysInWeek = 7;
-            for (var i = 0; i < DaysInWeek; i++)
+            const int daysInWeek = 7;
+            for (var i = 0; i < daysInWeek; i++)
             {
                 DateTime day = monday.AddDays(i);
                 tempWeekDays.Add(new WeekDay(day, Events));
@@ -159,8 +159,8 @@ namespace SVCalendar.WPF.View
         private void InitializeHalfHours()
         {
             var tempHalfHours = new List<HalfHour>();
-            const int HalfHoursInDay = 48;
-            for (var i = 0; i < HalfHoursInDay; i++)
+            const int halfHoursInDay = 48;
+            for (var i = 0; i < halfHoursInDay; i++)
             {
                 DateTime halfHour = CurrentDay.AddMinutes(i * 30);
                 tempHalfHours.Add(new HalfHour(DayEvents, halfHour));
