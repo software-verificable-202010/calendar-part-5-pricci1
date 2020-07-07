@@ -60,11 +60,6 @@ namespace SVCalendar.WPF
             return availableUsers;
         }
 
-        public List<User> GetAllUsers()
-        {
-            return db.Users.ToList();
-        }
-
         public List<Event> GetEvents()
         {
             return db.Events.ToList();
@@ -90,6 +85,11 @@ namespace SVCalendar.WPF
         {
             db.Update(anEvent);
             db.SaveChanges();
+        }
+
+        private List<User> GetAllUsers()
+        {
+            return db.Users.ToList();
         }
 
         #endregion
