@@ -41,6 +41,21 @@ namespace SVCalendar.WPF
 
         #region Properties
 
+        public RelayCommand ShowAddEventCommand
+        {
+            get;
+        }
+
+        public RelayCommand RefreshCommand
+        {
+            get;
+        }
+
+        public RelayCommand EditEventsCommand
+        {
+            get;
+        }
+
         private void OnEditEventsSelected()
         {
             CurrentViewModel = new EditEventsViewModel(eventsRepository, currentUser);
@@ -67,21 +82,6 @@ namespace SVCalendar.WPF
         {
             get => currentViewModel;
             set => SetProperty(ref currentViewModel, value);
-        }
-
-        public RelayCommand ShowAddEventCommand
-        {
-            get;
-        }
-
-        public RelayCommand RefreshCommand
-        {
-            get;
-        }
-
-        public RelayCommand EditEventsCommand
-        {
-            get;
         }
 
         #endregion Properties
