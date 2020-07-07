@@ -77,12 +77,6 @@ namespace SVCalendar.WPF.View
 
         #region Methods
 
-        private static DateTime GetMondayOfCurrentWeek(DateTime currentDay)
-        {
-            DayOfWeek currentDayOfWeek = currentDay.DayOfWeek;
-            return currentDay.AddDays(-1 * (int) currentDayOfWeek + 1);
-        }
-
         private void OnNextWeekSelected()
         {
             CurrentDay = CurrentDay.AddDays(7);
@@ -107,6 +101,12 @@ namespace SVCalendar.WPF.View
             }
 
             WeekDays = tempWeekDays;
+        }
+
+        private static DateTime GetMondayOfCurrentWeek(DateTime currentDay)
+        {
+            DayOfWeek currentDayOfWeek = currentDay.DayOfWeek;
+            return currentDay.AddDays(-1 * (int) currentDayOfWeek + 1);
         }
 
         #endregion
