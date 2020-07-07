@@ -3,6 +3,40 @@
 
 ![Preview](./preview.png)
 
+## LAST FIXES
+Here are the changes made for this extra submission:
+```
+commit 8cff56b5f733b9697f98ef7dc84e5323fe47bb52
+    fix(Naming Conventions): WeekGridViewModel.cs:102;162   
+    Inline variables must be in camelCase
+    NOTE: Breaks rule SA1303: local constants must start with an upper-case
+
+commit 0bada104d35afa31e8cf340813848def77141f9d
+    fix(Vertical Ordering): WeekGridViewModel.cs:101   
+    Function call dependencies should be pointing in the downwards direction
+    NOTE: fixing this rule breaks the rule SA1204 about static members before non-static
+
+commit 3a9e9c3cc081e4025c00becf97fdf41378d2f1cd
+    fix(Vertical Ordering): MonthGridViewModel.cs:202    
+    Function call dependencies should be pointing in the downwards direction
+
+commit ce20f44e820abe9a84c7a485376eea52571b59d3
+    fix(Good use of public and private): MonthGridViewModel.cs:90
+    Member should not be public if it's not used outside the class
+
+commit aefa20921744fcbea52ce74f4d43da4595dd281c
+    fix(Vertical Ordering): AddEventViewModel.cs:219
+    Function call dependencies should point in the downwards direction
+
+commit d1c59bdaa066a82fbc3341d319d332a4cf67323e
+    fix(Formatting): MainWindowViewModel.cs
+    Order the declarations based upon access modifier and visibility
+
+commit 43e1617641bec2d1abbd74574dc9e73269e33887
+    fix(Good use of private and public): EventsRepository.cs:63
+    Member should not be public if it's not used outside of the class
+```
+
 ## Tests
 > Tests with xUnit and Moq
 
